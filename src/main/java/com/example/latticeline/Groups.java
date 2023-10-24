@@ -3,6 +3,7 @@ package com.example.latticeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -127,6 +128,7 @@ public class Groups implements Initializable {
                 BorderPane borderPane = new BorderPane();
                 Text txt = new Text();
                 txt.setText(group);
+                txt.setFill(Color.WHITE);
                 StackPane stackPane = new StackPane();
                 stackPane.setId(group);
                 stackPane.setOnMouseClicked(e -> {
@@ -145,8 +147,10 @@ public class Groups implements Initializable {
                 });
                 stackPane.getChildren().add(txt);
                 stackPane.setMaxSize(280, 90);
+                stackPane.setMinSize(280, 90);
                 stackPane.setBackground(Background.fill(Color.GREEN));
-                stackPane.setStyle("-fx-background-radius: 10; -fx-border-radius: 10; -fx-background-color: #48b17f");
+                stackPane.setStyle("-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 2; -fx-border-color: WHITE;");
+                BorderPane.setMargin(stackPane, new Insets(20));
                 borderPane.setCenter(stackPane);
                 borderPane.setMaxSize(300, 100);
                 borderPane.setMinSize(300, 100);
