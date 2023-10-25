@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -61,6 +62,12 @@ public class Assign implements Initializable {
 
     @FXML
     private Button submitbtn;
+
+    @FXML
+    private Button statusbtn;
+
+    @FXML
+    private HBox statusbtns;
 
     FileChooser fileChooser = new FileChooser();
 
@@ -157,6 +164,15 @@ public class Assign implements Initializable {
         }
     }
 
+    @FXML
+    void Status(MouseEvent event) throws IOException {
+        Stage stage = (Stage) statusbtns.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("status-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         text.wrappingWidthProperty().bind(borderText.widthProperty());
@@ -208,6 +224,20 @@ public class Assign implements Initializable {
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
+        }
+        File fl = new File("isteacher.txt");
+        Scanner scT = null;
+        try {
+            scT = new Scanner(fl);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        String fndTch = scT.next();
+        if(Objects.equals(fndTch, "teacher")){
+            statusbtns.setVisible(true);
+        }
+        else{
+            statusbtns.setVisible(false);
         }
     }
 }

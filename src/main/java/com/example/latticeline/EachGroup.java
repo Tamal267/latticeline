@@ -15,6 +15,8 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
@@ -25,6 +27,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
 public class EachGroup implements Initializable {
     @FXML
@@ -41,6 +44,10 @@ public class EachGroup implements Initializable {
 
     @FXML
     private TilePane tilePane;
+
+
+    @FXML
+    private HBox teacherbtns;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -112,7 +119,15 @@ public class EachGroup implements Initializable {
 
         webengine.loadContent(htmlContent);
 
-        String usname = "tamal";
+
+        File file = new File("userinfo.txt");
+        Scanner usinf = null;
+        try {
+            usinf = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        String usname = usinf.next();
         String username = new String();
         String connect = new String();
         String gpname = "dsa1";
@@ -187,7 +202,20 @@ public class EachGroup implements Initializable {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
+        File fl = new File("isteacher.txt");
+        Scanner scT = null;
+        try {
+            scT = new Scanner(fl);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        String fndTch = scT.next();
+        if(Objects.equals(fndTch, "teacher")){
+            teacherbtns.setVisible(true);
+        }
+        else{
+            teacherbtns.setVisible(false);
+        }
     }
 
     @FXML

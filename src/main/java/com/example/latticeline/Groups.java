@@ -13,6 +13,8 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Groups implements Initializable {
     @FXML
@@ -104,20 +107,26 @@ public class Groups implements Initializable {
 
         webengine.loadContent(htmlContent);
 
-        String usname = "tamal";
-        String username = new String();
-        String connect = new String();
-        String groupName = "dsa1";
+        File file = new File("userinfo.txt");
+        Scanner usinf = null;
+        try {
+            usinf = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        String usname = usinf.next();
+        String username;
+        String connect = "";
         ArrayList<String > groups = new ArrayList<>();
         try {
-            Connection connection = DBconnect.getConnect();
-            String query = "SELECT * FROM `users`";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            ResultSet resultSet =  preparedStatement.executeQuery();
+            AtomicReference<Connection> connection = new AtomicReference<>(DBconnect.getConnect());
+            AtomicReference<String> query = new AtomicReference<>("SELECT * FROM `users`");
+            AtomicReference<PreparedStatement> preparedStatement = new AtomicReference<>(connection.get().prepareStatement(query.get()));
+            AtomicReference<ResultSet> resultSet = new AtomicReference<>(preparedStatement.get().executeQuery());
 
-            while(resultSet.next()){
-                username =resultSet.getString("username");
-                connect = resultSet.getString("connect");
+            while(resultSet.get().next()){
+                username = resultSet.get().getString("username");
+                connect = resultSet.get().getString("connect");
                 if(Objects.equals(username, usname)) break;
             }
             Scanner sc = new Scanner(connect);
@@ -133,6 +142,30 @@ public class Groups implements Initializable {
                 stackPane.setId(group);
                 stackPane.setOnMouseClicked(e -> {
                     try {
+                        connection.set(DBconnect.getConnect());
+                        query.set("SELECT * FROM `gp` WHERE name='" + group + "';");
+                        preparedStatement.set(connection.get().prepareStatement(query.get()));
+                        resultSet.set(preparedStatement.get().executeQuery());
+                        String teachers = "";
+                        while(resultSet.get().next()) {
+                            teachers = resultSet.get().getString("teachers");
+                        }
+                        Scanner scT = new Scanner(teachers);
+                        String tch = "";
+                        FileWriter fileWrite = new FileWriter("isteacher.txt");
+                        int flag = 0;
+                        while(scT.hasNext()){
+                            tch = scT.next();
+                            System.out.println(tch + "...");
+                            if(Objects.equals(tch, usname)){
+                                fileWrite.write("teacher");
+                                System.out.println(tch);
+                                flag = 1;
+                                break;
+                            }
+                        }
+                        if(flag == 0) fileWrite.write("Student");
+                        fileWrite.close();
                         FileWriter fileWriter = new FileWriter("groupname.txt");
                         fileWriter.write(group);
                         fileWriter.close();
@@ -141,7 +174,7 @@ public class Groups implements Initializable {
                         Scene scene = new Scene(fxmlLoader.load());
                         stage.setTitle("LatticeLine");
                         stage.setScene(scene);
-                    } catch (IOException ex) {
+                    } catch (IOException | SQLException ex) {
                         throw new RuntimeException(ex);
                     }
                 });
@@ -169,5 +202,4 @@ public class Groups implements Initializable {
         stage.setTitle("LatticeLine");
         stage.setScene(scene);
     }
-
 }
