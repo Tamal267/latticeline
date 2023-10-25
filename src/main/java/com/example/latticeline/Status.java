@@ -2,10 +2,15 @@ package com.example.latticeline;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.TilePane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
@@ -24,8 +29,17 @@ public class Status implements Initializable {
     @FXML
     private AnchorPane problemsbtn;
 
+
+    @FXML
+    private BorderPane borderbtn;
+
+
     @FXML
     private TilePane tilePane;
+
+
+    @FXML
+    private ScrollPane scrollid;
 
     @FXML
     void problems(MouseEvent event) {
@@ -129,7 +143,25 @@ public class Status implements Initializable {
             String atextStr = new String(atextDec);
             byte[] tempDec = Base64.getDecoder().decode(temp);
             String tempStr = new String(tempDec);
+            fname = fname + "\n----------------\n" + tempStr + "\n----------------\n" + atextStr + "\n\n";
             BorderPane borderPane = new BorderPane();
+            ScrollPane scrollPane = new ScrollPane();
+            Text txt = new Text();
+            txt.setText(fname);
+            txt.setFill(Color.WHITE);
+            scrollPane.setContent(txt);
+            scrollPane.setMaxSize(500, 500);
+            scrollPane.setMinSize(500, 500);
+            txt.setTextAlignment(TextAlignment.CENTER);
+            txt.wrappingWidthProperty().bind(borderbtn.widthProperty());
+            txt.setFill(Color.YELLOW);
+            scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            scrollPane.setStyle("-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 2; -fx-border-color: WHITE; -fx-background-color:  transparent; -fx-background:  transparent;");
+            BorderPane.setMargin(scrollPane, new Insets(20));
+            borderPane.setCenter(scrollPane);
+            borderPane.setMaxSize(520, 520);
+            borderPane.setMinSize(520, 520);
+            tilePane.getChildren().add(borderPane);
         }
     }
 }

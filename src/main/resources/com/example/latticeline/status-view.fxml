@@ -6,6 +6,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -115,6 +116,15 @@
             </children></AnchorPane>
         <AnchorPane layoutX="200.0" layoutY="7.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
+            <BorderPane fx:id="borderbtn" prefHeight="650.0" prefWidth="700.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <center>
+                  <ScrollPane hbarPolicy="NEVER" prefHeight="650.0" prefWidth="700.0" style="-fx-background: transparent; -fx-background-color: transparent;" vbarPolicy="NEVER" BorderPane.alignment="CENTER">
+                     <content>
+                        <TilePane fx:id="tilePane" />
+                     </content>
+                  </ScrollPane>
+               </center>
+            </BorderPane>
             <HBox layoutX="6.0" layoutY="600.0" prefHeight="50.0" prefWidth="85.0" style="-fx-background-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
             <HBox layoutX="320.0" layoutY="485.0" prefHeight="50.0" prefWidth="85.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <children>
@@ -125,11 +135,6 @@
                   </Button>
                </children>
             </HBox>
-            <ScrollPane layoutX="104.0" layoutY="47.0" prefHeight="650.0" prefWidth="700.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <content>
-                  <TilePane fx:id="tilePane" />
-               </content>
-            </ScrollPane>
          </children>
         </AnchorPane>
     </children>
