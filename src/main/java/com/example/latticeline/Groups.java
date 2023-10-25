@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -35,10 +36,14 @@ public class Groups implements Initializable {
     @FXML
     private WebView webview;
 
+    @FXML
+    private Button joinbtn;
 
     @FXML
     private TilePane tilePane;
 
+    @FXML
+    private Button crtbtn;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         WebEngine webengine = webview.getEngine();
@@ -198,6 +203,24 @@ public class Groups implements Initializable {
     void compiler(MouseEvent event) throws IOException {
         Stage stage = (Stage) compilerbtn.getScene().getWindow();
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("compiler-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
+    }
+
+    @FXML
+    void crt(MouseEvent event) throws IOException {
+        Stage stage = (Stage) crtbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("crtgrp-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
+    }
+
+    @FXML
+    void join(MouseEvent event) throws IOException {
+        Stage stage = (Stage) joinbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("joingrp-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("LatticeLine");
         stage.setScene(scene);

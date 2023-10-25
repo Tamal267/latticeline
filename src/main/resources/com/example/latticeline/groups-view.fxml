@@ -111,16 +111,17 @@
                         </AnchorPane>
                     </children>
                 </VBox>
-            </children></AnchorPane>
+            </children>
+      </AnchorPane>
         <TilePane fx:id="tilePane" layoutX="242.0" layoutY="32.0" prefHeight="560.0" prefWidth="700.0" style="-fx-background-color: none;" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
       <HBox layoutX="202.0" layoutY="544.0" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <Button mnemonicParsing="false" text="Create">
+            <Button fx:id="crtbtn" mnemonicParsing="false" onMouseClicked="#crt" text="Create">
                <HBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </HBox.margin>
             </Button>
-            <Button mnemonicParsing="false" text="Join">
+            <Button fx:id="joinbtn" mnemonicParsing="false" onMouseClicked="#join" text="Join">
                <HBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </HBox.margin>

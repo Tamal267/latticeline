@@ -1,55 +1,55 @@
 package com.example.latticeline;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.TilePane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Base64;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
 public class Status implements Initializable {
+    @FXML
+    private AnchorPane compilerbtn;
 
+    @FXML
+    private AnchorPane groupbtn;
+
+    @FXML
+    private AnchorPane problemsbtn;
     @FXML
     private WebView webview;
 
     @FXML
-    private AnchorPane problemsbtn;
-
-
-    @FXML
-    private BorderPane borderbtn;
-
+    private ScrollPane scrollPane;
 
     @FXML
     private TilePane tilePane;
 
 
     @FXML
-    private ScrollPane scrollid;
-
-    @FXML
-    void problems(MouseEvent event) {
-
-    }
+    private HBox teacherbtns;
 
     String id, users, txt, acceptedCode, inp;
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        tilePane.setMaxWidth(Region.USE_PREF_SIZE);
+        scrollPane.setFitToWidth(true);
         WebEngine webengine = webview.getEngine();
 
         String htmlContent = "<!DOCTYPE html>\n" +
@@ -115,6 +115,8 @@ public class Status implements Initializable {
                 "</html>";
 
         webengine.loadContent(htmlContent);
+
+
         File file = new File("assign.txt");
         Scanner sc = null;
         try {
@@ -145,23 +147,50 @@ public class Status implements Initializable {
             String tempStr = new String(tempDec);
             fname = fname + "\n----------------\n" + tempStr + "\n----------------\n" + atextStr + "\n\n";
             BorderPane borderPane = new BorderPane();
-            ScrollPane scrollPane = new ScrollPane();
             Text txt = new Text();
             txt.setText(fname);
+            borderPane.setId(id);
+            ScrollPane scrollPane1 = new ScrollPane();
             txt.setFill(Color.WHITE);
-            scrollPane.setContent(txt);
-            scrollPane.setMaxSize(500, 500);
-            scrollPane.setMinSize(500, 500);
-            txt.setTextAlignment(TextAlignment.CENTER);
-            txt.wrappingWidthProperty().bind(borderbtn.widthProperty());
-            txt.setFill(Color.YELLOW);
-            scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-            scrollPane.setStyle("-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 2; -fx-border-color: WHITE; -fx-background-color:  transparent; -fx-background:  transparent;");
-            BorderPane.setMargin(scrollPane, new Insets(20));
-            borderPane.setCenter(scrollPane);
-            borderPane.setMaxSize(520, 520);
-            borderPane.setMinSize(520, 520);
+            scrollPane1.setContent(txt);
+            scrollPane1.setMaxSize(300, 300);
+            scrollPane1.setMinSize(300, 300);
+            txt.setTextAlignment(TextAlignment.LEFT);
+            txt.wrappingWidthProperty().bind(scrollPane1.widthProperty());
+            scrollPane1.setStyle("-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 2; -fx-border-color: WHITE; -fx-background-color:  transparent; -fx-background: transparent;");
+            scrollPane1.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            scrollPane1.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            BorderPane.setMargin(scrollPane1, new Insets(20));
+            borderPane.setCenter(scrollPane1);
+            borderPane.setMaxSize(320, 320);
+            borderPane.setMinSize(320, 320);
             tilePane.getChildren().add(borderPane);
+            }
         }
+    @FXML
+    void problems(MouseEvent event) throws IOException {
+        Stage stage = (Stage) compilerbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("compiler-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
+    }
+    @FXML
+    void compiler(MouseEvent event) throws IOException {
+        Stage stage = (Stage) compilerbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("compiler-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
+    }
+
+
+    @FXML
+    void group(MouseEvent event) throws IOException {
+        Stage stage = (Stage) groupbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("groups-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
     }
 }
