@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
@@ -50,6 +51,11 @@ public class CrtAssing implements Initializable {
     @FXML
     private Label status;
 
+    @FXML
+    private Button backbtn;
+
+    @FXML
+    private AnchorPane groupbtn;
 
     FileChooser fileChooser = new FileChooser();
 
@@ -120,6 +126,23 @@ public class CrtAssing implements Initializable {
                 codeBox.appendText(scanner.nextLine() + "\n");
             }
         }
+    }
+    @FXML
+    void group(MouseEvent event) throws IOException {
+        Stage stage = (Stage) groupbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("groups-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
+    }
+
+    @FXML
+    void back(MouseEvent event) throws IOException {
+        Stage stage = (Stage) backbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("eachgroup-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
     }
 
     @FXML

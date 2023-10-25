@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -45,6 +46,9 @@ public class Members implements Initializable {
 
     @FXML
     private TilePane tilePane;
+
+    @FXML
+    private Button backbtn;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -192,6 +196,15 @@ public class Members implements Initializable {
     void group(MouseEvent event) throws IOException {
         Stage stage = (Stage) groupbtn.getScene().getWindow();
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("groups-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
+    }
+
+    @FXML
+    void back(MouseEvent event) throws IOException {
+        Stage stage = (Stage) backbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("eachgroup-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("LatticeLine");
         stage.setScene(scene);

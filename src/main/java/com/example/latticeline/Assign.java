@@ -71,6 +71,14 @@ public class Assign implements Initializable {
 
     FileChooser fileChooser = new FileChooser();
 
+    @FXML
+    private Button backbtn;
+
+    @FXML
+    private AnchorPane compilerbtn;
+
+    @FXML
+    private AnchorPane groupbtn;
     String id, users, txt, acceptedCode, inp;
 
     Text t = new Text("Yusuf");
@@ -95,6 +103,34 @@ public class Assign implements Initializable {
                 codeBox.appendText(scanner.nextLine() + "\n");
             }
         }
+    }
+
+    @FXML
+    void back(MouseEvent event) throws IOException {
+        Stage stage = (Stage) backbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("eachgroup-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
+    }
+
+
+    @FXML
+    void compiler(MouseEvent event) throws IOException {
+        Stage stage = (Stage) compilerbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("compiler-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
+    }
+
+    @FXML
+    void group(MouseEvent event) throws IOException {
+        Stage stage = (Stage) groupbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("groups-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
     }
 
     @FXML

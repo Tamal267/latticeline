@@ -231,7 +231,16 @@ public class EachGroup implements Initializable {
         stage.setTitle("LatticeLine");
         stage.setScene(scene);
     }
-
+    @FXML
+    private AnchorPane problemsbtn;
+    @FXML
+    void problems(MouseEvent event) throws IOException {
+        Stage stage = (Stage) problemsbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
+    }
 
     @FXML
     void group(MouseEvent event) throws IOException {
@@ -256,6 +265,18 @@ public class EachGroup implements Initializable {
     void members(MouseEvent event) throws IOException {
         Stage stage = (Stage) membersbtn.getScene().getWindow();
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("members-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
+    }
+
+    @FXML
+    private Button backbtn;
+
+    @FXML
+    void back(MouseEvent event) throws IOException {
+        Stage stage = (Stage) backbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("groups-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("LatticeLine");
         stage.setScene(scene);

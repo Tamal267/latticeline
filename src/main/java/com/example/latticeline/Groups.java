@@ -225,4 +225,15 @@ public class Groups implements Initializable {
         stage.setTitle("LatticeLine");
         stage.setScene(scene);
     }
+
+    @FXML
+    private AnchorPane problemsbtn;
+    @FXML
+    void problems(MouseEvent event) throws IOException {
+        Stage stage = (Stage) problemsbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
+    }
 }

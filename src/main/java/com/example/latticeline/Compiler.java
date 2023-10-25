@@ -25,6 +25,8 @@ public class Compiler implements Initializable {
 
     @FXML
     private WebView webview;
+    @FXML
+    private AnchorPane goGp;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -127,7 +129,7 @@ public class Compiler implements Initializable {
         String encodedCode = Base64.getEncoder().encodeToString(codeBox.getText().getBytes());
         String encodedInput = Base64.getEncoder().encodeToString(inputBox.getText().getBytes());
         Map<String, String> map = CompilerOnline.compile(encodedCode, encodedInput, "cpp", "1");
-        System.out.println(map);
+        outputBox.appendText(map.toString());
     }
 
 
@@ -143,4 +145,17 @@ public class Compiler implements Initializable {
         stage.setTitle("LatticeLine");
         stage.setScene(scene);
     }
+
+    @FXML
+    private AnchorPane groupbtn;
+
+    @FXML
+    void group(MouseEvent event) throws IOException {
+        Stage stage = (Stage) groupbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("groups-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
+    }
+
 }

@@ -7,6 +7,7 @@ import okhttp3.*;
 
 import java.io.IOException;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -72,7 +73,7 @@ public class CompilerOnline {
             byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
             String decodedString = new String(decodedBytes);
 
-            Map<String, String > map = new TreeMap<>();
+            Map<String, String > map = new HashMap<>();
             map.put("stdout", decodedString);
             map.put("time", time);
             map.put("memory", memory);
