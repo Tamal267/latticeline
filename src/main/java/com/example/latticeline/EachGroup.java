@@ -136,7 +136,14 @@ public class EachGroup implements Initializable {
         String usname = usinf.next();
         String username = new String();
         String connect = new String();
-        String gpname = "dsa1";
+        File file1 = new File("groupname.txt");
+        Scanner gpsc = null;
+        try {
+            gpsc = new Scanner(file1);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        String gpname = gpsc.next();
         String groupName = new String();
         String text = new String();
         String code = new String();

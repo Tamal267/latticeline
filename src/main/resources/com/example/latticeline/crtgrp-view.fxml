@@ -140,7 +140,7 @@
                   </StackPane>
                   <StackPane onMouseClicked="#crtGroup" prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1">
                      <children>
-                        <Button mnemonicParsing="false" text="Create" />
+                        <Button mnemonicParsing="false" onMouseClicked="#crtGroup" text="Create" />
                      </children>
                   </StackPane>
                </children>

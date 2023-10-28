@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.Scanner;
@@ -35,7 +36,7 @@ public class CrtGrp implements Initializable {
     private TextArea gpBox;
 
     @FXML
-    void crtGroup(MouseEvent event) throws FileNotFoundException {
+    void crtGroup(MouseEvent event) throws FileNotFoundException, SQLException {
         File file = new File("userinfo.txt");
         Scanner sc = new Scanner(file);
         String teacher = sc.next();
@@ -55,9 +56,19 @@ public class CrtGrp implements Initializable {
         }
         try {
             preparedStatement.executeUpdate();
-            status.setText("Assignment Passed");
+            status.setText("Passed");
         } catch (SQLException e) {
             status.setText("An error occured. Duplication may occur. Check it.");
+        }
+        query = "SELECT * FROM `users` WHERE username='" + teacher + "';";
+        preparedStatement = connection.prepareStatement(query);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            String connect = resultSet.getString("connect");
+            connect += " " + gpBox.getText();
+            query = "UPDATE users SET connect='" + connect + "' WHERE username='" + teacher + "';";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.executeUpdate();
         }
     }
     @FXML

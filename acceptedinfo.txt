@@ -1,0 +1,80 @@
+Accepted
+Time: 2ms
+Memory: 7KB
+
+
+-------------
+
+/******************************************************************************
+* Author:           Syed Tamal
+* Created:          24 Jul 2023  10:25:00 
+******************************************************************************/
+#include <bits/stdc++.h>
+using namespace std;
+#define fastio ios::sync_with_stdio(false); cin.tie(nullptr);
+#define int long long
+
+void solve(){
+    int n, m;
+    cin>>n>>m;
+    if(n==1){
+        int cnt = 0;
+        for(int i=1;i<=6;i++) if(i == m) cnt++;
+        cout<<cnt<<"\n";
+    }
+    else if(n==2){
+        int cnt = 0;
+        for(int i=1;i<=6;i++){
+            for(int j=1;j<=6;j++){
+                if(i+j == m) cnt++;
+            }
+        }
+        cout<<cnt<<"\n";
+    }
+    else if(n==3){
+        int cnt = 0;
+        for(int i=1;i<=6;i++){
+            for(int j=1;j<=6;j++){
+                for(int k=1;k<=6;k++){
+                    if(i+j+k == m) cnt++;
+                }
+            }
+        }
+        cout<<cnt<<"\n";
+    }
+    else if(n==4){
+        int cnt = 0;
+        for(int i=1;i<=6;i++){
+            for(int j=1;j<=6;j++){
+                for(int k=1;k<=6;k++){
+                    for(int l=1;l<=6;l++){
+                        if(i+j+k+l == m) cnt++;
+                    }
+                }
+            }
+        }
+        cout<<cnt<<"\n";
+    }
+    else if(n==5){
+        int cnt = 0;
+        for(int i=1;i<=6;i++){
+            for(int j=1;j<=6;j++){
+                for(int k=1;k<=6;k++){
+                    for(int l=1;l<=6;l++){
+                        for(int o=1;o<=6;o++){
+                            if(i+j+k+l+o == m) cnt++;
+                        }
+                    }
+                }
+            }
+        }
+        cout<<cnt<<"\n";
+    }
+}
+
+int32_t main(){
+    fastio
+    int n;
+    cin>>n;
+    for(int i=1;i<=n;i++) solve();
+}

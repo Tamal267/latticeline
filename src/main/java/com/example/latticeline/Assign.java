@@ -9,16 +9,15 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -78,11 +77,11 @@ public class Assign implements Initializable {
     private AnchorPane compilerbtn;
 
     @FXML
+    private Button acceptedbtn;
+
+    @FXML
     private AnchorPane groupbtn;
     String id, users, txt, acceptedCode, inp;
-
-    Text t = new Text("Yusuf");
-
 
     @FXML
     void problems(MouseEvent event) throws IOException {
@@ -96,10 +95,10 @@ public class Assign implements Initializable {
     @FXML
     void chooseFile(MouseEvent event) throws FileNotFoundException {
         File file = fileChooser.showOpenDialog(new Stage());
-        if(file != null){
+        if (file != null) {
             codeBox.clear();
             Scanner scanner = new Scanner(file);
-            while(scanner.hasNextLine()){
+            while (scanner.hasNextLine()) {
                 codeBox.appendText(scanner.nextLine() + "\n");
             }
         }
@@ -147,19 +146,19 @@ public class Assign implements Initializable {
         int mxTime = 0;
         int mxMemory = 0;
         Scanner sc = new Scanner(inp);
-        while(sc.hasNext()){
+        while (sc.hasNext()) {
             String inp = sc.next();
             byte[] decodeInp = Base64.getDecoder().decode(inp);
             String decodedInp = new String(decodeInp);
             Map<String, String> mapAc = CompilerOnline.compile(acceptedCode, inp, "cpp", "1");
             Map<String, String> mapUc = CompilerOnline.compile(encodedCode, inp, "cpp", "1");
-            if(!Objects.equals(mapUc.get("status"), "Accepted")){
+            if (!Objects.equals(mapUc.get("status"), "Accepted")) {
                 String msg = mapUc.get("status") + "\n";
                 outBox.setText(msg);
                 ac = 0;
                 break;
             }
-            if(!Objects.equals(mapAc.get("stdout"), mapUc.get("stdout"))){
+            if (!Objects.equals(mapAc.get("stdout"), mapUc.get("stdout"))) {
                 String msg = "Wrong Answer\n\n" +
                         "Input:\n" +
                         decodedInp +
@@ -179,14 +178,14 @@ public class Assign implements Initializable {
             mxTime = Math.max(mxTime, tm);
             mxMemory = Math.max(mxMemory, parseInt(mapUc.get("memory")));
         }
-        if(ac == 1){
+        if (ac == 1) {
             String msg = "Accepted\n" + "Time: " + Integer.toString(mxTime) + "ms\n" + "Memory: " + Integer.toString(mxMemory) + "KB\n";
             outBox.setText(msg);
             Connection connection = DBconnect.getConnect();
             String query = "SELECT * FROM `assignment` WHERE assignId='" + id + "'";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            ResultSet resultSet =  preparedStatement.executeQuery();
-            while(resultSet.next()){
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
                 String usrs = resultSet.getString("users");
                 String encodedMsg = Base64.getEncoder().encodeToString(msg.getBytes());
                 file = new File("userinfo.txt");
@@ -209,12 +208,28 @@ public class Assign implements Initializable {
         stage.setScene(scene);
     }
 
+    @FXML
+    void accepted(MouseEvent event) throws IOException {
+        Stage stage = (Stage) acceptedbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("accepted-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         text.wrappingWidthProperty().bind(borderText.widthProperty());
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         outBox.wrappingWidthProperty().bind(borderText1.widthProperty());
-        outBox.setText("");
+        File usFile = new File("userinfo.txt");
+        Scanner usSc = null;
+        try {
+            usSc = new Scanner(usFile);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        String usn = usSc.nextLine();
         File file = new File("assign.txt");
         try {
             Scanner sc = new Scanner(file);
@@ -228,52 +243,76 @@ public class Assign implements Initializable {
             System.out.println(txt);
             acceptedCode = sc.nextLine();
             inp = sc.nextLine();
-            users = sc.nextLine();
-            File usFile = new File("userinfo.txt");
-            Scanner usSc = new Scanner(usFile);
-            String usn = usSc.nextLine();
-            String fname;
-            String temp = "";
-            String atext = "";
-            int flag = 0;
-            usSc = new Scanner(users);
-            String abc = usSc.next();
-            while(usSc.hasNext()){
-                fname = usSc.next();
-                temp = usSc.next();
-                atext = usSc.next();
-                System.out.println(fname + "\n" + temp + "\n" + atext);
-                if(Objects.equals(fname, usn)){
-                    flag = 1;
-                    break;
+            while(sc.hasNext()){
+                users = sc.next();
+                if(Objects.equals(users, usn)){
+                    acceptedbtn.setVisible(true);
+                    String temp = sc.next();
+                    String atext = sc.next();
+                    byte[] atextDec = Base64.getDecoder().decode(atext);
+                    String atextStr = new String(atextDec);
+                    byte[] tempDec = Base64.getDecoder().decode(temp);
+                    String tempStr = new String(tempDec);
+//                    System.out.println(atextStr);
+                    String t = tempStr + "\n\n-------------\n\n" + atextStr;
+                    FileWriter fileWriter = new FileWriter("acceptedinfo.txt");
+                    fileWriter.write(t);
+                    fileWriter.close();
+                    acceptedbtn.setVisible(true);
                 }
             }
-            if(flag == 1){
-                submitbtn.setBackground(Background.fill(Color.GREEN));
-                byte[] atextDec = Base64.getDecoder().decode(atext);
-                String atextStr = new String(atextDec);
-                byte[] tempDec = Base64.getDecoder().decode(temp);
-                String tempStr = new String(tempDec);
-                System.out.println(atextStr);
-                codeBox.setText(atextStr);
-                outBox.setText(tempStr);
+
+//            String fname;
+//            String temp = "";
+//            String atext = "";
+//            int flag = 0;
+//            usSc = new Scanner(users);
+//            String abc = usSc.next();
+//            while(usSc.hasNext()){
+//                fname = usSc.next();
+//                temp = usSc.next();
+//                atext = usSc.next();
+//                System.out.println(fname + "\n" + temp + "\n" + atext);
+//                if(Objects.equals(fname, usn)){
+//                    flag = 1;
+//                    break;
+//                }
+//            }
+//            if(flag == 1){
+//                submitbtn.setBackground(Background.fill(Color.GREEN));
+//                byte[] atextDec = Base64.getDecoder().decode(atext);
+//                String atextStr = new String(atextDec);
+//                byte[] tempDec = Base64.getDecoder().decode(temp);
+//                String tempStr = new String(tempDec);
+//                System.out.println(atextStr);
+//                String t = tempStr + "\n\n-------------\n\n" + atextStr;
+//                FileWriter fileWriter = new FileWriter("acceptedinfo.txt");
+//                fileWriter.write(t);
+//                fileWriter.close();
+//                acceptedbtn.setVisible(true);
+//            }
+//        } catch (FileNotFoundException e) {
+//            throw new RuntimeException(e);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+            File fl = new File("isteacher.txt");
+            Scanner scT = null;
+            try {
+                scT = new Scanner(fl);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+            String fndTch = scT.next();
+            if (Objects.equals(fndTch, "teacher")) {
+                statusbtns.setVisible(true);
+            } else {
+                statusbtns.setVisible(false);
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
-        }
-        File fl = new File("isteacher.txt");
-        Scanner scT = null;
-        try {
-            scT = new Scanner(fl);
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-        String fndTch = scT.next();
-        if(Objects.equals(fndTch, "teacher")){
-            statusbtns.setVisible(true);
-        }
-        else{
-            statusbtns.setVisible(false);
         }
     }
 }
