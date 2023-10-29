@@ -4,34 +4,87 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Base64;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
-public class Compiler implements Initializable {
+public class AcceptedP implements Initializable {
+
+    @FXML
+    private AnchorPane anchor;
+
+    @FXML
+    private Button backbtn;
+
+    @FXML
+    private AnchorPane compilerbtn;
+
+    @FXML
+    private AnchorPane groupbtn;
+
+    @FXML
+    private Text outBox;
+
+    @FXML
+    private AnchorPane problemsbtn;
 
     @FXML
     private WebView webview;
-    @FXML
-    private AnchorPane goGp;
-    @FXML
-    private TextArea inputBox;
 
     @FXML
-    private TextArea outputBox;
+    private ScrollPane scrollPane;
+
+    @FXML
+    void back(MouseEvent event) throws IOException {
+        Stage stage = (Stage) backbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("problem-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
+    }
+
+
+    @FXML
+    void compiler(MouseEvent event) throws IOException {
+        Stage stage = (Stage) compilerbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("compiler-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
+    }
+
+    @FXML
+    void group(MouseEvent event) throws IOException {
+        Stage stage = (Stage) groupbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("groups-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
+    }
+
+    @FXML
+    void problems(MouseEvent event) throws IOException {
+        Stage stage = (Stage) problemsbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         WebEngine webengine = webview.getEngine();
@@ -99,65 +152,24 @@ public class Compiler implements Initializable {
                 "</html>";
 
         webengine.loadContent(htmlContent);
+        scrollPane.setFitToWidth(true);
 
-        inputBox.setStyle("-fx-highlight-fill: lightgray; -fx-highlight-text-fill: firebrick; -fx-font-size: 20px;");
-    }
+        outBox.setTextAlignment(TextAlignment.LEFT);
+        outBox.wrappingWidthProperty().bind(anchor.widthProperty());
+        outBox.setFill(Color.WHITE);
+        scrollPane.setStyle("-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 2; -fx-border-color: WHITE; -fx-background-color:  transparent; -fx-background: transparent;");
 
-    @FXML
-    private TextArea codeBox;
-
-    FileChooser fileChooser = new FileChooser();
-
-    @FXML
-    void chooseFile(MouseEvent event) throws FileNotFoundException {
-        File file = fileChooser.showOpenDialog(new Stage());
-        if(file != null){
-            codeBox.clear();
-            Scanner scanner = new Scanner(file);
-            while(scanner.hasNextLine()){
-                codeBox.appendText(scanner.nextLine() + "\n");
-            }
+        File file = new File("acceptedinfo.txt");
+        Scanner sc = null;
+        try {
+            sc = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
         }
+        StringBuilder out = new StringBuilder();
+        while(sc.hasNext()){
+            out.append(sc.nextLine()).append("\n");
+        }
+        outBox.setText(String.valueOf(out));
     }
-
-
-
-    @FXML
-    void run(MouseEvent event) throws IOException {
-//        outputBox.setWrapText(true);
-//        String out = CppCompiler.compileAndRunFromFile(codeBox.getText(), inputBox.getText());
-//        outputBox.clear();
-//        outputBox.appendText(out);
-        String encodedCode = Base64.getEncoder().encodeToString(codeBox.getText().getBytes());
-        String encodedInput = Base64.getEncoder().encodeToString(inputBox.getText().getBytes());
-        Map<String, String> map = CompilerOnline.compile(encodedCode, encodedInput, "cpp", "1");
-        outputBox.appendText(map.toString());
-    }
-
-
-    @FXML
-    private AnchorPane problemsbtn;
-
-
-    @FXML
-    void problems(MouseEvent event) throws IOException {
-        Stage stage = (Stage) problemsbtn.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("LatticeLine");
-        stage.setScene(scene);
-    }
-
-    @FXML
-    private AnchorPane groupbtn;
-
-    @FXML
-    void group(MouseEvent event) throws IOException {
-        Stage stage = (Stage) groupbtn.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("groups-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("LatticeLine");
-        stage.setScene(scene);
-    }
-
 }

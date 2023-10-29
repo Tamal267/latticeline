@@ -121,12 +121,12 @@
                   <TextArea fx:id="codeBox" layoutX="13.0" layoutY="48.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.topAnchor="48.0" />
                   <HBox layoutX="11.0" layoutY="265.0" prefHeight="25.0" prefWidth="200.0">
                      <children>
-                        <Button mnemonicParsing="false" onMouseClicked="#chooseFile" text="Choose File">
+                        <Button mnemonicParsing="false" onMouseClicked="#chooseFile" styleClass="assign" stylesheets="@btn.css" text="Choose File">
                            <HBox.margin>
                               <Insets right="10.0" />
                            </HBox.margin>
                         </Button>
-                        <Button fx:id="submitbtn" mnemonicParsing="false" onMouseEntered="#run" text="Submit" />
+                        <Button fx:id="submitbtn" mnemonicParsing="false" onMouseClicked="#run" styleClass="assign" stylesheets="@btn.css" text="Submit" />
                      </children>
                   </HBox>
                   <BorderPane fx:id="borderText1" layoutX="13.0" layoutY="308.0">
@@ -189,12 +189,12 @@
             </HBox>
             <HBox alignment="TOP_RIGHT" layoutX="320.0" layoutY="485.0" prefHeight="50.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <children>
-                  <Button fx:id="acceptedbtn" mnemonicParsing="false" onMouseClicked="#accepted" text="Accepted" visible="false">
+                  <Button fx:id="acceptedbtn" mnemonicParsing="false" onMouseClicked="#accepted" styleClass="back" stylesheets="@btn.css" text="Accepted" visible="false">
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="backbtn" mnemonicParsing="false" onMouseClicked="#back" text="Back">
+                  <Button fx:id="backbtn" mnemonicParsing="false" onMouseClicked="#back" styleClass="back" stylesheets="@btn.css" text="Back">
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>

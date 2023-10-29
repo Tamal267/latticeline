@@ -8,15 +8,11 @@
       <jdbc-url>jdbc:mysql://localhost:3306/lattice</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="@clubcognita.database.windows.net" uuid="df47ae81-c74e-43ca-a27e-370f9a144f82">
-      <driver-ref>sqlserver.ms</driver-ref>
+    <data-source source="LOCAL" name="lattice@clubdata.mysql.database.azure.com" uuid="7e0f297e-6667-4ba9-a360-abcc30ac06ab">
+      <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
-      <imported>true</imported>
-      <jdbc-driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbc-driver>
-      <jdbc-url>jdbc:sqlserver://clubcognita.database.windows.net:1433;encrypt=true;trustServerCertificate=false;loginTimeout=30;</jdbc-url>
-      <jdbc-additional-properties>
-        <property name="AZURE_SQL_DB_SERVER" value="/subscriptions/8d57d0dd-c59e-4774-8a00-0a22dc65e793/resourceGroups/Tamal/providers/Microsoft.Sql/servers/clubcognita" />
-      </jdbc-additional-properties>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://clubdata.mysql.database.azure.com:3306/lattice</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

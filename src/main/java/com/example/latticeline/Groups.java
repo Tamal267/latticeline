@@ -6,10 +6,12 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
@@ -44,6 +46,9 @@ public class Groups implements Initializable {
 
     @FXML
     private Button crtbtn;
+
+    @FXML
+    private ScrollPane scrollPane;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         WebEngine webengine = webview.getEngine();
@@ -111,6 +116,8 @@ public class Groups implements Initializable {
                 "</html>";
 
         webengine.loadContent(htmlContent);
+        tilePane.setMaxWidth(Region.USE_PREF_SIZE);
+        scrollPane.setFitToWidth(true);
 
         File file = new File("userinfo.txt");
         Scanner usinf = null;
@@ -142,9 +149,10 @@ public class Groups implements Initializable {
                 BorderPane borderPane = new BorderPane();
                 Text txt = new Text();
                 txt.setText(group);
-                txt.setFill(Color.WHITE);
+//                txt.setStyle("-fx-font-size: 30");
+//                txt.setWrappingWidth(250);
+                borderPane.setId(group);
                 StackPane stackPane = new StackPane();
-                stackPane.setId(group);
                 stackPane.setOnMouseClicked(e -> {
                     try {
                         connection.set(DBconnect.getConnect());
@@ -184,14 +192,16 @@ public class Groups implements Initializable {
                     }
                 });
                 stackPane.getChildren().add(txt);
-                stackPane.setMaxSize(280, 90);
-                stackPane.setMinSize(280, 90);
-                stackPane.setBackground(Background.fill(Color.GREEN));
+                stackPane.setMaxSize(200, 90);
+                stackPane.setMinSize(200, 90);
+                txt.setTextAlignment(TextAlignment.CENTER);
+                txt.wrappingWidthProperty().bind(stackPane.widthProperty());
+                txt.setFill(Color.WHITE);
                 stackPane.setStyle("-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 2; -fx-border-color: WHITE;");
                 BorderPane.setMargin(stackPane, new Insets(20));
                 borderPane.setCenter(stackPane);
-                borderPane.setMaxSize(300, 100);
-                borderPane.setMinSize(300, 100);
+                borderPane.setMaxSize(220, 110);
+                borderPane.setMinSize(220, 110);
                 tilePane.getChildren().add(borderPane);
             }
         } catch (SQLException e) {

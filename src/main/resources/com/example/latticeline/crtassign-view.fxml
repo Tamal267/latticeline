@@ -120,7 +120,7 @@
                   <TextArea fx:id="codeBox" layoutX="13.0" layoutY="48.0" prefHeight="200.0" prefWidth="200.0" promptText="Enter the accepted code" AnchorPane.topAnchor="48.0" />
                   <HBox layoutX="11.0" layoutY="265.0" prefHeight="25.0" prefWidth="200.0">
                      <children>
-                        <Button mnemonicParsing="false" onMouseClicked="#chooseFile" text="Choose File">
+                        <Button mnemonicParsing="false" onMouseClicked="#chooseFile" styleClass="assign" stylesheets="@btn.css" text="Choose File">
                            <HBox.margin>
                               <Insets right="10.0" />
                            </HBox.margin>
@@ -129,8 +129,8 @@
                   </HBox>
                   <BorderPane fx:id="borderText1" layoutX="13.0" layoutY="308.0" />
                   <TextArea fx:id="inputBox" layoutX="13.0" layoutY="303.0" prefHeight="200.0" prefWidth="200.0" promptText="Enter the input" />
-                  <Button layoutX="17.0" layoutY="516.0" mnemonicParsing="false" onMouseClicked="#nxtInput" text="Next Input" />
-                  <Button layoutX="113.0" layoutY="516.0" mnemonicParsing="false" onMouseClicked="#submit" text="Submit" />
+                  <Button layoutX="17.0" layoutY="516.0" mnemonicParsing="false" onMouseClicked="#nxtInput" styleClass="assign" stylesheets="@btn.css" text="Next Input" />
+                  <Button layoutX="113.0" layoutY="516.0" mnemonicParsing="false" onMouseClicked="#submit" styleClass="assign" stylesheets="@btn.css" text="Submit" />
                </children>
             </AnchorPane>
             <AnchorPane layoutX="31.0" layoutY="45.0" prefHeight="399.0" prefWidth="378.0" AnchorPane.bottomAnchor="206.0" AnchorPane.leftAnchor="31.0" AnchorPane.rightAnchor="291.0" AnchorPane.topAnchor="45.0">
@@ -163,9 +163,9 @@
                </children>
             </AnchorPane>
             <HBox layoutX="6.0" layoutY="600.0" prefHeight="50.0" prefWidth="85.0" style="-fx-background-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-            <HBox layoutX="320.0" layoutY="485.0" prefHeight="50.0" prefWidth="85.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <HBox alignment="TOP_RIGHT" layoutX="320.0" layoutY="485.0" prefHeight="50.0" prefWidth="85.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <children>
-                  <Button fx:id="backbtn" mnemonicParsing="false" onMouseClicked="#back" text="Back">
+                  <Button fx:id="backbtn" mnemonicParsing="false" onMouseClicked="#back" styleClass="back" stylesheets="@btn.css" text="Back">
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>

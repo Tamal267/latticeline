@@ -117,7 +117,7 @@
             <HBox layoutX="6.0" layoutY="600.0" prefHeight="50.0" prefWidth="85.0" style="-fx-background-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
             <HBox layoutX="320.0" layoutY="485.0" prefHeight="50.0" prefWidth="85.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <children>
-                  <Button fx:id="backbtn" mnemonicParsing="false" onMouseClicked="#back" text="Back">
+                  <Button fx:id="backbtn" mnemonicParsing="false" onMouseClicked="#back" styleClass="back" stylesheets="@btn.css" text="Back">
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
@@ -140,7 +140,7 @@
                   </StackPane>
                   <StackPane onMouseClicked="#crtGroup" prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1">
                      <children>
-                        <Button mnemonicParsing="false" onMouseClicked="#crtGroup" text="Join" />
+                        <Button mnemonicParsing="false" onMouseClicked="#crtGroup" styleClass="assign" stylesheets="@btn.css" text="Join" />
                      </children>
                   </StackPane>
                </children>

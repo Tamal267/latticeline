@@ -114,14 +114,14 @@
                 </VBox>
             </children></AnchorPane>
       <HBox layoutX="634.0" layoutY="550.0" prefHeight="50.0" prefWidth="85.0" style="-fx-background-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" />
-      <HBox fx:id="teacherbtns" layoutX="202.0" layoutY="544.0" prefHeight="50.0" prefWidth="615.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="85.0">
+      <HBox fx:id="teacherbtns" layoutX="202.0" layoutY="544.0" prefHeight="50.0" prefWidth="615.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0">
          <children>
-            <Button fx:id="crtassignbtn" mnemonicParsing="false" onMouseClicked="#crtassign" text="Create Assignment">
+            <Button fx:id="crtassignbtn" mnemonicParsing="false" onMouseClicked="#crtassign" styleClass="back" stylesheets="@btn.css" text="Create Assignment">
                <HBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="membersbtn" mnemonicParsing="false" onMouseClicked="#members" text="Members">
+            <Button fx:id="membersbtn" mnemonicParsing="false" onMouseClicked="#members" styleClass="back" stylesheets="@btn.css" text="Members">
                <HBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </HBox.margin>
@@ -132,9 +132,14 @@
               <TilePane fx:id="tilePane" style="-fx-background-color: transparent;" />
          </content>
       </ScrollPane>
-      <HBox layoutX="815.0" layoutY="550.0" prefHeight="50.0" prefWidth="85.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <HBox alignment="TOP_RIGHT" layoutX="815.0" layoutY="550.0" prefHeight="50.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <Button fx:id="backbtn" mnemonicParsing="false" onMouseClicked="#back" text="Back">
+            <Button fx:id="announcebtn" mnemonicParsing="false" onMouseClicked="#announce" styleClass="back" stylesheets="@btn.css" text="Announce">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="backbtn" mnemonicParsing="false" onMouseClicked="#back" styleClass="back" stylesheets="@btn.css" text="Back">
                <HBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </HBox.margin>

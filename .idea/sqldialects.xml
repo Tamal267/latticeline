@@ -2,6 +2,7 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$USER_HOME$/Downloads/lattice(1).csv" dialect="TSQL" />
+    <file url="file://$USER_HOME$/Downloads/lattice(3).sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/example/latticeline/Assign.java" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/example/latticeline/CrtAssing.java" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/example/latticeline/JoinGrp.java" dialect="GenericSQL" />

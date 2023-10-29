@@ -55,6 +55,9 @@ public class EachGroup implements Initializable {
     @FXML
     private HBox teacherbtns;
 
+    @FXML
+    private Button announcebtn;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         tilePane.setMaxWidth(Region.USE_PREF_SIZE);
@@ -258,7 +261,6 @@ public class EachGroup implements Initializable {
         stage.setScene(scene);
     }
 
-
     @FXML
     void crtassign(MouseEvent event) throws IOException {
         Stage stage = (Stage) crtassignbtn.getScene().getWindow();
@@ -289,4 +291,12 @@ public class EachGroup implements Initializable {
         stage.setScene(scene);
     }
 
+    @FXML
+    void announce(MouseEvent event) throws IOException {
+        Stage stage = (Stage) announcebtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("announce-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
+    }
 }

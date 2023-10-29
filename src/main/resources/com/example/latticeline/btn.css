@@ -1,0 +1,20 @@
+.back{
+    -fx-background-color: #5ebde8;
+}
+.back:hover{
+    -fx-background-color: #0fee21;
+}
+.assign{
+    -fx-background-color: #00fc84;
+    -fx-background-radius: 2;
+    -fx-border-radius: 2;
+    -fx-border-width: 2;
+    -fx-border-color: #5ebde8;
+}
+.assign:hover{
+    -fx-background-color: #de6cd2;
+    -fx-background-radius: 2;
+    -fx-border-radius: 2;
+    -fx-border-width: 2;
+    -fx-border-color: #5ebde8;
+}

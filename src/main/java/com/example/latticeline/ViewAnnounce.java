@@ -5,11 +5,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.TilePane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -17,17 +16,18 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
-import java.io.FileWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
-public class HelloController implements Initializable {
+public class ViewAnnounce implements Initializable {
     @FXML
     private AnchorPane compilerbtn;
 
@@ -38,10 +38,18 @@ public class HelloController implements Initializable {
     private WebView webview;
 
     @FXML
+    private ScrollPane scrollPane;
+
+    @FXML
     private TilePane tilePane;
+
+    @FXML
+    private Button crtannouncebtn;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        tilePane.setMaxWidth(Region.USE_PREF_SIZE);
+        scrollPane.setFitToWidth(true);
         WebEngine webengine = webview.getEngine();
 
         String htmlContent = "<!DOCTYPE html>\n" +
@@ -108,69 +116,44 @@ public class HelloController implements Initializable {
 
         webengine.loadContent(htmlContent);
 
-        String text = new String();
-        String code = new String();
-        String inputs = new String();
-        String assignId = new String();
-        String users = new String();
-        ArrayList<assignMent> assignments = new ArrayList<>();
+
+        File file = new File("userinfo.txt");
+
+        File file1 = new File("groupname.txt");
+        Scanner gpsc = null;
+        try {
+            gpsc = new Scanner(file1);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        String gpname = gpsc.next();
+
         try {
             Connection connection = DBconnect.getConnect();
-            String query = "SELECT * FROM `problems`";
+            String query = "SELECT * FROM `gp` WHERE name='" + gpname + "';";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet resultSet =  preparedStatement.executeQuery();
 
             while(resultSet.next()){
-                assignId = resultSet.getString("problemid");
-                text = resultSet.getString("statement");
-                code = resultSet.getString("code");
-                inputs = resultSet.getString("input");
-                users = resultSet.getString("users");
+                String asn = resultSet.getString("announce");
+                asn = encodeDecode.decode(asn);
                 BorderPane borderPane = new BorderPane();
                 Text txt = new Text();
-                txt.setText(assignId);
-                txt.setStyle("-fx-font-size: 30");
+                txt.setText(asn);
 //                txt.setWrappingWidth(250);
-                borderPane.setId(text);
+                borderPane.setId(asn);
                 StackPane stackPane = new StackPane();
-                String finalAssignId = assignId;
-                String finalText = text;
-                String finalCode = code;
-                String finalInputs = inputs;
-                String finalUsers = users;
-                stackPane.setOnMouseClicked(e -> {
-                    try {
-                        FileWriter fileWriter = new FileWriter("assign.txt");
-                        fileWriter.write(finalAssignId);
-                        fileWriter.write("\n");
-                        fileWriter.write(finalText);
-                        fileWriter.write("\n");
-                        fileWriter.write(finalCode);
-                        fileWriter.write("\n");
-                        fileWriter.write(finalInputs);
-                        fileWriter.write("\n");
-                        fileWriter.write(finalUsers);
-                        fileWriter.close();
-                        Stage stage = (Stage) borderPane.getScene().getWindow();
-                        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("problem-view.fxml"));
-                        Scene scene = new Scene(fxmlLoader.load());
-                        stage.setTitle("LatticeLine");
-                        stage.setScene(scene);
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                });
                 stackPane.getChildren().add(txt);
-                stackPane.setMaxSize(300, 300);
-                stackPane.setMinSize(300, 300);
+                stackPane.setMaxSize(500, 500);
+                stackPane.setMinSize(500, 500);
                 txt.setTextAlignment(TextAlignment.CENTER);
                 txt.wrappingWidthProperty().bind(stackPane.widthProperty());
                 txt.setFill(Color.WHITE);
                 stackPane.setStyle("-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 2; -fx-border-color: WHITE;");
                 BorderPane.setMargin(stackPane, new Insets(20));
                 borderPane.setCenter(stackPane);
-                borderPane.setMaxSize(320, 320);
-                borderPane.setMinSize(320, 320);
+                borderPane.setMaxSize(520, 520);
+                borderPane.setMinSize(520, 520);
                 tilePane.getChildren().add(borderPane);
             }
         } catch (SQLException e) {
@@ -186,7 +169,16 @@ public class HelloController implements Initializable {
         stage.setTitle("LatticeLine");
         stage.setScene(scene);
     }
-
+    @FXML
+    private AnchorPane problemsbtn;
+    @FXML
+    void problems(MouseEvent event) throws IOException {
+        Stage stage = (Stage) problemsbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
+    }
 
     @FXML
     void group(MouseEvent event) throws IOException {
@@ -196,4 +188,27 @@ public class HelloController implements Initializable {
         stage.setTitle("LatticeLine");
         stage.setScene(scene);
     }
+
+
+    @FXML
+    private Button backbtn;
+
+    @FXML
+    void back(MouseEvent event) throws IOException {
+        Stage stage = (Stage) backbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("groups-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
+    }
+
+    @FXML
+    void crtannounce(MouseEvent event) throws IOException {
+        Stage stage = (Stage) crtannouncebtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("crtannounce-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
+    }
+
 }
