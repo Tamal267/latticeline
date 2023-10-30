@@ -118,14 +118,14 @@
          </children></AnchorPane>
       <GridPane layoutX="222.0" layoutY="42.0" prefHeight="499.0" prefWidth="630.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="374.0" minWidth="10.0" prefWidth="373.0" />
+          <ColumnConstraints hgrow="ALWAYS" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="298.0" minWidth="10.0" prefWidth="235.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <BorderPane prefHeight="200.0" prefWidth="200.0">
+            <BorderPane fx:id="borderPane">
                <bottom>
                   <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
@@ -145,13 +145,10 @@
                <top>
                   <Text fill="WHITE" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="C++ code" BorderPane.alignment="CENTER" />
                </top>
-               <center>
-                  <TextArea fx:id="codeBox" prefHeight="362.0" prefWidth="346.0" BorderPane.alignment="CENTER" />
-               </center>
             </BorderPane>
             <GridPane GridPane.columnIndex="1">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />

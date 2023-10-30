@@ -1,5 +1,6 @@
 package com.example.latticeline;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -7,19 +8,27 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.LineNumberFactory;
+import org.fxmisc.richtext.model.StyleSpans;
+import org.fxmisc.richtext.model.StyleSpansBuilder;
+import org.reactfx.Subscription;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Base64;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.Scanner;
+import java.time.Duration;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Compiler implements Initializable {
 
@@ -32,6 +41,193 @@ public class Compiler implements Initializable {
 
     @FXML
     private TextArea outputBox;
+
+    @FXML
+    private BorderPane borderPane;
+
+
+
+
+
+
+    private static final String[] KEYWORDS = new String[] {
+            "alignas",
+            "alignof",
+            "and",
+            "and_eq",
+            "asm",
+            "atomic_cancel",
+            "atomic_commit",
+            "atomic_noexcept",
+            "auto",
+            "bitand",
+            "bitor",
+            "bool",
+            "break",
+            "case",
+            "catch",
+            "char",
+            "char8_t",
+            "char16_t",
+            "char32_t",
+            "class",
+            "compl",
+            "concept",
+            "const",
+            "consteval",
+            "constexpr",
+            "constinit",
+            "const_cast",
+            "continue",
+            "co_await",
+            "co_return",
+            "co_yield",
+            "decltype",
+            "default",
+            "delete",
+            "do",
+            "double",
+            "dynamic_cast",
+            "else",
+            "enum",
+            "explicit",
+            "export",
+            "extern",
+            "false",
+            "float",
+            "for",
+            "friend",
+            "goto",
+            "include",
+            "if",
+            "inline",
+            "int",
+            "long",
+            "mutable",
+            "namespace",
+            "new",
+            "noexcept",
+            "not",
+            "not_eq",
+            "nullptr",
+            "operator",
+            "or",
+            "or_eq",
+            "private",
+            "protected",
+            "public",
+            "reflexpr",
+            "register",
+            "reinterpret_cast",
+            "requires",
+            "return",
+            "short",
+            "signed",
+            "sizeof",
+            "static",
+            "static_assert",
+            "static_cast",
+            "struct",
+            "switch",
+            "synchronized",
+            "template",
+            "this",
+            "thread_local",
+            "throw",
+            "true",
+            "try",
+            "typedef",
+            "typeid",
+            "typename",
+            "union",
+            "unsigned",
+            "using",
+            "virtual",
+            "void",
+            "volatile",
+            "wchar_t",
+            "while",
+            "xor",
+            "xor_eq"
+    };
+
+    private static final String KEYWORD_PATTERN = "\\b(" + String.join("|", KEYWORDS) + ")\\b";
+    private static final String PAREN_PATTERN = "\\(|\\)";
+    private static final String BRACE_PATTERN = "\\{|\\}";
+    private static final String BRACKET_PATTERN = "\\[|\\]";
+    private static final String SEMICOLON_PATTERN = "\\;";
+    private static final String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"";
+    private static final String COMMENT_PATTERN = "//[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/";
+
+    private static final Pattern PATTERN = Pattern.compile(
+            "(?<KEYWORD>" + KEYWORD_PATTERN + ")"
+                    + "|(?<PAREN>" + PAREN_PATTERN + ")"
+                    + "|(?<BRACE>" + BRACE_PATTERN + ")"
+                    + "|(?<BRACKET>" + BRACKET_PATTERN + ")"
+                    + "|(?<SEMICOLON>" + SEMICOLON_PATTERN + ")"
+                    + "|(?<STRING>" + STRING_PATTERN + ")"
+                    + "|(?<COMMENT>" + COMMENT_PATTERN + ")"
+    );
+    private CodeArea codeArea;
+    private ExecutorService executor;
+    private static final String sampleCode = String.join("\n", new String[] {
+            "#include<bits/stdc++.h>",
+            "using namespace std;",
+            "",
+            "int main {",
+            "",
+            "",
+            "}"
+    });
+
+    private Task<StyleSpans<Collection<String>>> computeHighlightingAsync() {
+        String text = codeArea.getText();
+        Task<StyleSpans<Collection<String>>> task = new Task<StyleSpans<Collection<String>>>() {
+            @Override
+            protected StyleSpans<Collection<String>> call() throws Exception {
+                return computeHighlighting(text);
+            }
+        };
+        executor.execute(task);
+        return task;
+    }
+
+    private void applyHighlighting(StyleSpans<Collection<String>> highlighting) {
+        codeArea.setStyleSpans(0, highlighting);
+    }
+
+    static StyleSpans<Collection<String>> computeHighlighting(String text) {
+        Matcher matcher = PATTERN.matcher(text);
+        int lastKwEnd = 0;
+        StyleSpansBuilder<Collection<String>> spansBuilder
+                = new StyleSpansBuilder<>();
+        while(matcher.find()) {
+            String styleClass =
+                    matcher.group("KEYWORD") != null ? "keyword" :
+                            matcher.group("PAREN") != null ? "paren" :
+                                    matcher.group("BRACE") != null ? "brace" :
+                                            matcher.group("BRACKET") != null ? "bracket" :
+                                                    matcher.group("SEMICOLON") != null ? "semicolon" :
+                                                            matcher.group("STRING") != null ? "string" :
+                                                                    matcher.group("COMMENT") != null ? "comment" :
+                                                                            null; /* never happens */ assert styleClass != null;
+            spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
+            spansBuilder.add(Collections.singleton(styleClass), matcher.end() - matcher.start());
+            lastKwEnd = matcher.end();
+        }
+        spansBuilder.add(Collections.emptyList(), text.length() - lastKwEnd);
+        return spansBuilder.create();
+    }
+
+
+
+
+
+
+
+
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         WebEngine webengine = webview.getEngine();
@@ -100,11 +296,32 @@ public class Compiler implements Initializable {
 
         webengine.loadContent(htmlContent);
 
-        inputBox.setStyle("-fx-highlight-fill: lightgray; -fx-highlight-text-fill: firebrick; -fx-font-size: 20px;");
-    }
 
-    @FXML
-    private TextArea codeBox;
+        executor = Executors.newSingleThreadExecutor();
+        codeArea = new CodeArea();
+        codeArea.setStyle("-fx-font-size:18;");
+        codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
+        Subscription cleanupWhenDone = codeArea.multiPlainChanges()
+                .successionEnds(Duration.ofMillis(500))
+                .retainLatestUntilLater(executor)
+                .supplyTask(this::computeHighlightingAsync)
+                .awaitLatest(codeArea.multiPlainChanges())
+                .filterMap(t -> {
+                    if(t.isSuccess()) {
+                        return Optional.of(t.get());
+                    } else {
+                        t.getFailure().printStackTrace();
+                        return Optional.empty();
+                    }
+                })
+                .subscribe(this::applyHighlighting);
+
+        // call when no longer need it: `cleanupWhenFinished.unsubscribe();`
+
+        codeArea.replaceText(0, 0, sampleCode);
+
+        borderPane.setCenter(codeArea);
+    }
 
     FileChooser fileChooser = new FileChooser();
 
@@ -112,10 +329,10 @@ public class Compiler implements Initializable {
     void chooseFile(MouseEvent event) throws FileNotFoundException {
         File file = fileChooser.showOpenDialog(new Stage());
         if(file != null){
-            codeBox.clear();
+            codeArea.clear();
             Scanner scanner = new Scanner(file);
             while(scanner.hasNextLine()){
-                codeBox.appendText(scanner.nextLine() + "\n");
+                codeArea.appendText(scanner.nextLine() + "\n");
             }
         }
     }
@@ -128,7 +345,7 @@ public class Compiler implements Initializable {
 //        String out = CppCompiler.compileAndRunFromFile(codeBox.getText(), inputBox.getText());
 //        outputBox.clear();
 //        outputBox.appendText(out);
-        String encodedCode = Base64.getEncoder().encodeToString(codeBox.getText().getBytes());
+        String encodedCode = Base64.getEncoder().encodeToString(codeArea.getText().getBytes());
         String encodedInput = Base64.getEncoder().encodeToString(inputBox.getText().getBytes());
         Map<String, String> map = CompilerOnline.compile(encodedCode, encodedInput, "cpp", "1");
         outputBox.appendText(map.toString());

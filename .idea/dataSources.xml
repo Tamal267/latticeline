@@ -12,7 +12,10 @@
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://clubdata.mysql.database.azure.com:3306/lattice</jdbc-url>
+      <jdbc-url>jdbc:mysql://clubdata.mysql.database.azure.com:3306/lattice?serverTimezone=UTC&amp;useSSL=true&amp;requireSSL=false</jdbc-url>
+      <jdbc-additional-properties>
+        <property name="AZURE_SQL_DB_SERVER" value="/subscriptions/8d57d0dd-c59e-4774-8a00-0a22dc65e793/resourceGroups/sqldata/providers/Microsoft.DBforMySQL/flexibleServers/clubdata" />
+      </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

@@ -86,7 +86,17 @@
             <artifactId>javafx-web</artifactId>
             <version>22-ea+11</version>
         </dependency>
-
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.7.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.fxmisc.richtext/richtextfx -->
+        <dependency>
+            <groupId>org.fxmisc.richtext</groupId>
+            <artifactId>richtextfx</artifactId>
+            <version>0.11.2</version>
+        </dependency>
     </dependencies>
 
     <build>

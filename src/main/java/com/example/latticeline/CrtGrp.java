@@ -76,6 +76,7 @@ public class CrtGrp implements Initializable {
         Stage stage = (Stage) problemsbtn.getScene().getWindow();
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
+        scene.getStylesheets().add(HelloApplication.class.getResource("java-keywords.css").toExternalForm());
         stage.setTitle("LatticeLine");
         stage.setScene(scene);
     }
@@ -85,6 +86,7 @@ public class CrtGrp implements Initializable {
         Stage stage = (Stage) compilerbtn.getScene().getWindow();
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("compiler-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
+        scene.getStylesheets().add(HelloApplication.class.getResource("java-keywords.css").toExternalForm());
         stage.setTitle("LatticeLine");
         stage.setScene(scene);
     }
