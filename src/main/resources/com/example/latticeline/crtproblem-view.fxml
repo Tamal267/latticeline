@@ -141,12 +141,13 @@
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints maxHeight="192.0" minHeight="10.0" prefHeight="42.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="357.0" minHeight="10.0" prefHeight="357.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="357.0" minHeight="10.0" prefHeight="324.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="357.0" minHeight="10.0" prefHeight="44.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <BorderPane prefHeight="200.0" prefWidth="200.0">
                            <center>
-                              <TextArea fx:id="idBox" prefHeight="200.0" prefWidth="200.0" promptText="Enter your assignment name" BorderPane.alignment="CENTER" />
+                              <TextArea fx:id="idBox" prefHeight="200.0" prefWidth="200.0" promptText="Enter your problem name" BorderPane.alignment="CENTER" />
                            </center>
                         </BorderPane>
                         <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
@@ -156,6 +157,11 @@
                                     <TextArea fx:id="txtBox" prefHeight="200.0" prefWidth="200.0" promptText="Enter the problem statement" BorderPane.alignment="CENTER" />
                                  </center>
                               </BorderPane>
+                           </center>
+                        </BorderPane>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+                           <center>
+                              <TextArea fx:id="timelimitbox" prefHeight="200.0" prefWidth="200.0" promptText="Enter time limit in second" BorderPane.alignment="CENTER" />
                            </center>
                         </BorderPane>
                      </children>

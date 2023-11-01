@@ -18,3 +18,9 @@
     -fx-border-width: 2;
     -fx-border-color: #5ebde8;
 }
+.border{
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-width: 2;
+    -fx-border-color: WHITE;
+}

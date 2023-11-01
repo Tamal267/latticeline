@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
@@ -14,6 +15,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -22,7 +24,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
-public class CrtProblem implements Initializable {
+public class CrtConPrb {
     @FXML
     private AnchorPane compilerbtn;
 
@@ -51,7 +53,11 @@ public class CrtProblem implements Initializable {
     private Label status;
 
     @FXML
+    private Button backbtn;
+
+    @FXML
     private AnchorPane groupbtn;
+
 
     @FXML
     private TextArea timelimitbox;
@@ -59,6 +65,8 @@ public class CrtProblem implements Initializable {
     FileChooser fileChooser = new FileChooser();
 
     String id, users, txt, acceptedCode, inp = "", timelimit;
+
+    contestInfo info = contestInfo.getInstance();
 
     @FXML
     void nxtInput(MouseEvent event) {
@@ -85,7 +93,7 @@ public class CrtProblem implements Initializable {
     }
 
     @FXML
-    void submit(MouseEvent event) throws FileNotFoundException {
+    void submit(MouseEvent event) throws IOException {
         id = idBox.getText();
         txt = encodeDecode.encode(txtBox.getText());
         acceptedCode = encodeDecode.encode(codeBox.getText());
@@ -97,25 +105,30 @@ public class CrtProblem implements Initializable {
         String gpname = sc.next();
         String insertStr = "'" + id + "', '" + txt + "', '" + acceptedCode + "', '" + inp + "', '" + users + "', '" + timelimit + "'";
         System.out.println(insertStr);
+        System.out.println(insertStr);
         Connection connection = null;
         try {
             connection = DBconnect.getConnect();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        String query = "INSERT INTO `problems` VALUES (" + insertStr + ");";
+        String query = "INSERT INTO `conProb` VALUES (" + insertStr + ");";
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = connection.prepareStatement(query);
         } catch (SQLException e) {
-            status.setText("An error occured. Duplication may occur. Check it.");
+            status.setText("An error occured. Check it.");
         }
         try {
             preparedStatement.executeUpdate();
-            status.setText("Assignment Passed");
+            status.setText("Passed");
         } catch (SQLException e) {
             status.setText("An error occured. Duplication may occur. Check it.");
         }
+        String ids = info.getProblemsIds();
+        ids += " " + encodeDecode.encode(id);
+        System.out.println(ids);
+        info.setProblemsIds(ids);
     }
     @FXML
     void chooseFile(MouseEvent event) throws FileNotFoundException {
@@ -138,7 +151,12 @@ public class CrtProblem implements Initializable {
     }
 
     @FXML
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    void back(MouseEvent event) throws IOException {
+        System.out.println(info.getContestName());
+        Stage stage = (Stage) backbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("crtcontest-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
     }
 }

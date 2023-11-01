@@ -24,6 +24,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static java.lang.Double.parseDouble;
@@ -81,7 +83,7 @@ public class Assign implements Initializable {
 
     @FXML
     private AnchorPane groupbtn;
-    String id, users, txt, acceptedCode, inp;
+    String id, users, txt, acceptedCode, inp, timelimit;
 
     @FXML
     void problems(MouseEvent event) throws IOException {
@@ -113,7 +115,6 @@ public class Assign implements Initializable {
         stage.setScene(scene);
     }
 
-
     @FXML
     void compiler(MouseEvent event) throws IOException {
         Stage stage = (Stage) compilerbtn.getScene().getWindow();
@@ -141,6 +142,10 @@ public class Assign implements Initializable {
 //        outputBox.appendText(out);
 
 
+        LocalDateTime tmm = LocalDateTime.now();
+        DateTimeFormatter pat = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        String time = tmm.format(pat);
+
         File file = new File("assign.txt");
         String encodedCode = Base64.getEncoder().encodeToString(codeBox.getText().getBytes());
         int ac = 1;
@@ -151,8 +156,8 @@ public class Assign implements Initializable {
             String inp = sc.next();
             byte[] decodeInp = Base64.getDecoder().decode(inp);
             String decodedInp = new String(decodeInp);
-            Map<String, String> mapAc = CompilerOnline.compile(acceptedCode, inp, "cpp", "1");
-            Map<String, String> mapUc = CompilerOnline.compile(encodedCode, inp, "cpp", "1");
+            Map<String, String> mapAc = CompilerOnline.compile(acceptedCode, inp, "cpp", timelimit);
+            Map<String, String> mapUc = CompilerOnline.compile(encodedCode, inp, "cpp", timelimit);
             if (!Objects.equals(mapUc.get("status"), "Accepted")) {
                 String msg = mapUc.get("status") + "\n";
                 outBox.setText(msg);
@@ -180,7 +185,7 @@ public class Assign implements Initializable {
             mxMemory = Math.max(mxMemory, parseInt(mapUc.get("memory")));
         }
         if (ac == 1) {
-            String msg = "Accepted\n" + "Time: " + Integer.toString(mxTime) + "ms\n" + "Memory: " + Integer.toString(mxMemory) + "KB\n";
+            String msg = time + "\nAccepted\n" + "Time: " + Integer.toString(mxTime) + "ms\n" + "Memory: " + Integer.toString(mxMemory) + "KB\n";
             outBox.setText(msg);
             Connection connection = DBconnect.getConnect();
             String query = "SELECT * FROM `assignment` WHERE assignId='" + id + "'";
@@ -240,10 +245,11 @@ public class Assign implements Initializable {
             txt = sc.nextLine();
             byte[] decodedBytes = Base64.getDecoder().decode(txt);
             String decodedString = new String(decodedBytes);
-            text.setText(decodedString);
             System.out.println(txt);
             acceptedCode = sc.nextLine();
             inp = sc.nextLine();
+            timelimit = sc.nextLine();
+            text.setText("Time Limit: " + timelimit + "s\n\n" + decodedString);
             while(sc.hasNext()){
                 users = sc.next();
                 if(Objects.equals(users, usn)){

@@ -1,15 +1,16 @@
 package com.example.latticeline;
 
 public class assignMent {
-    String gpname, text, code, input, assignId, users;
+    String gpname, text, code, input, assignId, users, timelimit;
 
-    public assignMent(String gpname, String text, String code, String input, String assignId, String users) {
+    public assignMent(String gpname, String text, String code, String input, String assignId, String users, String timelimit) {
         this.gpname = gpname;
         this.text = text;
         this.code = code;
         this.input = input;
         this.assignId = assignId;
         this.users = users;
+        this.timelimit = timelimit;
     }
 
     public String getGpname() {
@@ -58,5 +59,13 @@ public class assignMent {
 
     public void setAssignId(String assignId) {
         this.assignId = assignId;
+    }
+
+    public String getTimelimit() {
+        return timelimit;
+    }
+
+    public void setTimelimit(String timelimit) {
+        this.timelimit = timelimit;
     }
 }

@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -15,7 +16,8 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
-import java.io.FileWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -24,8 +26,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
-public class HelloController implements Initializable {
+public class ShowRank implements Initializable {
     @FXML
     private AnchorPane compilerbtn;
 
@@ -36,14 +39,16 @@ public class HelloController implements Initializable {
     private WebView webview;
 
     @FXML
-    private TilePane tilePane;
+    private ScrollPane scrollPane;
 
     @FXML
-    private ScrollPane scrollPane;
+    private VBox tilePane;
+
+    @FXML
+    private Button backbtn;
+    startEndTime stend = startEndTime.getInstance();
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        tilePane.setMaxWidth(Region.USE_PREF_SIZE);
-        scrollPane.setFitToWidth(true);
         WebEngine webengine = webview.getEngine();
 
         String htmlContent = "<!DOCTYPE html>\n" +
@@ -110,77 +115,41 @@ public class HelloController implements Initializable {
 
         webengine.loadContent(htmlContent);
 
-        String text = new String();
-        String code = new String();
-        String inputs = new String();
-        String assignId = new String();
-        String users = new String();
-        String timelimit = new String();
-        ArrayList<assignMent> assignments = new ArrayList<>();
+
+        tilePane.setMaxWidth(Region.USE_PREF_SIZE);
+        scrollPane.setFitToWidth(true);
+
         try {
             Connection connection = DBconnect.getConnect();
-            String query = "SELECT * FROM `problems`";
+            String query = "SELECT * FROM `contest` WHERE contestName='" + stend.getContestName() + "'";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet resultSet =  preparedStatement.executeQuery();
 
+            int iter = 1;
             while(resultSet.next()){
-                assignId = resultSet.getString("problemid");
-                text = resultSet.getString("statement");
-                code = resultSet.getString("code");
-                inputs = resultSet.getString("input");
-                users = resultSet.getString("users");
-                timelimit = resultSet.getString("timeLimit");
-                BorderPane borderPane = new BorderPane();
-                Text txt = new Text();
-                txt.setText(assignId);
-                txt.setStyle("-fx-font-size: 30");
-//                txt.setWrappingWidth(250);
-                borderPane.setId(text);
-                StackPane stackPane = new StackPane();
-                String finalAssignId = assignId;
-                String finalText = text;
-                String finalCode = code;
-                String finalInputs = inputs;
-                String finalUsers = users;
-                String finalTimelimit = timelimit;
-                stackPane.setOnMouseClicked(e -> {
-                    try {
-                        FileWriter fileWriter = new FileWriter("assign.txt");
-                        fileWriter.write(finalAssignId);
-                        fileWriter.write("\n");
-                        fileWriter.write(finalText);
-                        fileWriter.write("\n");
-                        fileWriter.write(finalCode);
-                        fileWriter.write("\n");
-                        fileWriter.write(finalInputs);
-                        fileWriter.write("\n");
-                        fileWriter.write(finalTimelimit);
-                        fileWriter.write("\n");
-                        fileWriter.write(finalUsers);
-                        fileWriter.close();
-                        Stage stage = (Stage) borderPane.getScene().getWindow();
-                        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("problem-view.fxml"));
-                        Scene scene = new Scene(fxmlLoader.load());
-                        stage.setTitle("LatticeLine");
-                        stage.setScene(scene);
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                });
-                stackPane.getChildren().add(txt);
-                stackPane.setMaxSize(300, 300);
-                stackPane.setMinSize(300, 300);
-                txt.setTextAlignment(TextAlignment.CENTER);
-                txt.wrappingWidthProperty().bind(stackPane.widthProperty());
-                txt.setFill(Color.WHITE);
-                stackPane.setStyle("-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 2; -fx-border-color: WHITE;");
-                BorderPane.setMargin(stackPane, new Insets(20));
-                borderPane.setCenter(stackPane);
-                borderPane.setMaxSize(320, 320);
-                borderPane.setMinSize(320, 320);
-                tilePane.getChildren().add(borderPane);
+                String ranking = resultSet.getString("ranking");
+                Scanner sc = new Scanner(ranking);
+                while(sc.hasNext()){
+                    String temp = encodeDecode.decode(sc.next());
+                    Scanner getSc = new Scanner(temp);
+                    String usn = getSc.next();
+                    long solve = getSc.nextLong();
+                    long penaly = getSc.nextLong();
+                    long prepenlty = getSc.nextLong();
+
+                    System.out.println(solve + " " + penaly);
+
+                    FXMLLoader fxmlLoader = new FXMLLoader();
+                    fxmlLoader.setLocation(getClass().getResource("singleGrid-view.fxml"));
+                    GridPane grid =fxmlLoader.load();
+                    SingleGrid sgrid = fxmlLoader.getController();
+                    sgrid.setGrid(new rankInfo(usn, solve, penaly, prepenlty), iter++);
+                    tilePane.getChildren().add(grid);
+                }
             }
         } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -200,6 +169,15 @@ public class HelloController implements Initializable {
     void group(MouseEvent event) throws IOException {
         Stage stage = (Stage) groupbtn.getScene().getWindow();
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("groups-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("LatticeLine");
+        stage.setScene(scene);
+    }
+
+    @FXML
+    void back(MouseEvent event) throws IOException {
+        Stage stage = (Stage) backbtn.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("eachgroup-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("LatticeLine");
         stage.setScene(scene);

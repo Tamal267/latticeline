@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.latticeline.CrtAssing">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.latticeline.CrtConPrb">
     <children>
         <AnchorPane prefHeight="650.0" prefWidth="200.0" style="-fx-background-color: #493259;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -141,13 +141,13 @@
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints maxHeight="192.0" minHeight="10.0" prefHeight="42.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="357.0" minHeight="10.0" prefHeight="343.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="357.0" minHeight="10.0" prefHeight="46.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="357.0" minHeight="10.0" prefHeight="345.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="357.0" minHeight="10.0" prefHeight="44.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <BorderPane prefHeight="200.0" prefWidth="200.0">
                            <center>
-                              <TextArea fx:id="idBox" prefHeight="200.0" prefWidth="200.0" promptText="Enter your assignment name" BorderPane.alignment="CENTER" />
+                              <TextArea fx:id="idBox" prefHeight="200.0" prefWidth="200.0" promptText="Enter your problem name" BorderPane.alignment="CENTER" />
                            </center>
                         </BorderPane>
                         <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
@@ -161,7 +161,7 @@
                         </BorderPane>
                         <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
                            <center>
-                              <TextArea fx:id="timelimitbox" prefHeight="200.0" prefWidth="200.0" promptText="Enter time limit in second" BorderPane.alignment="CENTER" />
+                              <TextArea fx:id="timelimitbox" prefHeight="30.0" prefWidth="378.0" promptText="Enter time limit in second" BorderPane.alignment="CENTER" />
                            </center>
                         </BorderPane>
                      </children>

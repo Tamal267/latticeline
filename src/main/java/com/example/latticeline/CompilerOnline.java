@@ -6,10 +6,7 @@ import com.google.gson.JsonSyntaxException;
 import okhttp3.*;
 
 import java.io.IOException;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class CompilerOnline {
     public static Map<String, String> compile(String code, String input, String lan, String timeLimit) throws IOException {
@@ -69,12 +66,23 @@ public class CompilerOnline {
 
             if(output != null) output = output.substring(1, output.length() - 3);
 
-            String encodedString = output;
-            byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
-            String decodedString = new String(decodedBytes);
+            System.out.println(output);
+
+            String encodeOut = "";
+            String dOut = "";
+            for(int i = 0; i< Objects.requireNonNull(output).length(); i++){
+                if(output.charAt(i) == '\\'){
+                    dOut += encodeDecode.decode(encodeOut);
+                    encodeOut = "";
+                    i++;
+                }
+                else encodeOut += output.charAt(i);
+            }
+
+            System.out.println(encodeOut);
 
             Map<String, String > map = new HashMap<>();
-            map.put("stdout", decodedString);
+            map.put("stdout", dOut);
             map.put("time", time);
             map.put("memory", memory);
             map.put("status", status);

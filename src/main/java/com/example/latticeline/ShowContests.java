@@ -1,11 +1,15 @@
 package com.example.latticeline;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -15,6 +19,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,12 +30,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.Scanner;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
-public class EachGroup implements Initializable {
+public class ShowContests implements Initializable {
     @FXML
     private AnchorPane compilerbtn;
 
@@ -46,26 +53,12 @@ public class EachGroup implements Initializable {
     @FXML
     private TilePane tilePane;
 
-    @FXML
-    private Button crtassignbtn;
-
-    @FXML
-    private Button membersbtn;
-
-    @FXML
-    private HBox teacherbtns;
-
-    @FXML
-    private Button announcebtn;
-
-    @FXML
-    private Button contestbtn;
-
-    @FXML
-    private Button crtcontestbtn;
-
+    startEndTime stend = startEndTime.getInstance();
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+
+
         tilePane.setMaxWidth(Region.USE_PREF_SIZE);
         scrollPane.setFitToWidth(true);
         WebEngine webengine = webview.getEngine();
@@ -153,57 +146,80 @@ public class EachGroup implements Initializable {
             throw new RuntimeException(e);
         }
         String gpname = gpsc.next();
-        String groupName = new String();
-        String text = new String();
-        String code = new String();
-        String inputs = new String();
-        String assignId = new String();
+        String contestName = new String();
+        String startTime = new String();
+        String duration = new String();
+        String problemsIds = new String();
+        String ranking = new String();
         String users = new String();
-        String timelimit = new String();
         ArrayList<assignMent> assignments = new ArrayList<>();
         try {
             Connection connection = DBconnect.getConnect();
-            String query = "SELECT * FROM `assignment`";
+            String query = "SELECT * FROM `contest` WHERE groupName='" + gpname + "';";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet resultSet =  preparedStatement.executeQuery();
 
             while(resultSet.next()){
-                groupName = resultSet.getString("group_name");
-                text = resultSet.getString("text");
-                code = resultSet.getString("code");
-                inputs = resultSet.getString("input");
-                assignId = resultSet.getString("assignId");
-                timelimit = resultSet.getString("timeLimit");
-                users = resultSet.getString("users");
-                if(Objects.equals(groupName, gpname)){
-                    assignments.add(new assignMent(groupName, text, code, inputs, assignId, users, timelimit));
+                contestName = resultSet.getString("contestName");
+                startTime = resultSet.getString("startTime");
+
+                stend.setContestName(contestName);
+
+                stend.setStart(startTime);
+
+
+
+                Scanner sc = new Scanner(startTime);
+                String year = sc.next(), month = sc.next(), day = sc.next(), hour = sc.next(), min = sc.next(), sec = sc.next();
+                String startTimecon = year + "/" + month + "/" + day + " " + hour + ":" + min + ":" + sec;
+
+
+
+                duration = resultSet.getString("duration");
+
+                sc = new Scanner(duration);
+                year = sc.next();
+                month = sc.next();
+                day = sc.next();
+                hour = sc.next();
+                min = sc.next();
+                sec = sc.next();
+                String durationcon =  year + "/" + month + "/" + day + " " + hour + ":" + min + ":" + sec;
+                stend.setEnd(duration);
+                String msg = "";
+                LocalDateTime chk = LocalDateTime.now();
+                DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy MM dd HH mm ss");
+                String nowstr = chk.format(fmt);
+                if(startTime.compareTo(nowstr) > 0) {
+                    msg = "Upcoming...";
                 }
-            }
-            for (assignMent assign : assignments) {
+
+                if(duration.compareTo(nowstr) < 0) {
+                    msg = "Ended";
+                }
+
+                else {
+                    msg = "Running...";
+                }
+
+                problemsIds = resultSet.getString("problemsIds");
+                ranking = resultSet.getString("ranking");
+                String showText = contestName + "\n" + startTimecon + "\n" + durationcon + "\n" + msg;
                 BorderPane borderPane = new BorderPane();
                 Text txt = new Text();
-                txt.setText(assign.getAssignId());
-                txt.setStyle("-fx-font-size: 30");
+                txt.setText(showText);
+//                txt.setStyle("-fx-font-size: 30");
 //                txt.setWrappingWidth(250);
-                borderPane.setId(assign.getAssignId());
+                borderPane.setId(contestName);
                 StackPane stackPane = new StackPane();
+                String finalProblemsIds = problemsIds;
                 stackPane.setOnMouseClicked(e -> {
                     try {
-                        FileWriter fileWriter = new FileWriter("assign.txt");
-                        fileWriter.write(assign.getAssignId());
-                        fileWriter.write("\n");
-                        fileWriter.write(assign.getText());
-                        fileWriter.write("\n");
-                        fileWriter.write(assign.getCode());
-                        fileWriter.write("\n");
-                        fileWriter.write(assign.getInput());
-                        fileWriter.write("\n");
-                        fileWriter.write(assign.getTimelimit());
-                        fileWriter.write("\n");
-                        fileWriter.write(assign.getUsers());
+                        FileWriter fileWriter = new FileWriter("problem.txt");
+                        fileWriter.write(finalProblemsIds);
                         fileWriter.close();
                         Stage stage = (Stage) borderPane.getScene().getWindow();
-                        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("assign-view.fxml"));
+                        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("showcontestsprb-view.fxml"));
                         Scene scene = new Scene(fxmlLoader.load());
                         stage.setTitle("LatticeLine");
                         stage.setScene(scene);
@@ -227,20 +243,8 @@ public class EachGroup implements Initializable {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        File fl = new File("isteacher.txt");
-        Scanner scT = null;
-        try {
-            scT = new Scanner(fl);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        String fndTch = scT.next();
-        if(Objects.equals(fndTch, "teacher")){
-            teacherbtns.setVisible(true);
-        }
-        else{
-            teacherbtns.setVisible(false);
-        }
+
+
     }
 
     @FXML
@@ -273,59 +277,15 @@ public class EachGroup implements Initializable {
     }
 
     @FXML
-    void crtassign(MouseEvent event) throws IOException {
-        Stage stage = (Stage) crtassignbtn.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("crtassign-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("LatticeLine");
-        stage.setScene(scene);
-    }
-
-    @FXML
-    void members(MouseEvent event) throws IOException {
-        Stage stage = (Stage) membersbtn.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("members-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("LatticeLine");
-        stage.setScene(scene);
-    }
-
-    @FXML
     private Button backbtn;
 
     @FXML
     void back(MouseEvent event) throws IOException {
         Stage stage = (Stage) backbtn.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("groups-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("eachgroup-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("LatticeLine");
         stage.setScene(scene);
     }
 
-    @FXML
-    void announce(MouseEvent event) throws IOException {
-        Stage stage = (Stage) announcebtn.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("announce-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("LatticeLine");
-        stage.setScene(scene);
-    }
-
-    @FXML
-    void contest(MouseEvent event) throws IOException {
-        Stage stage = (Stage) contestbtn.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("showcontests-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("LatticeLine");
-        stage.setScene(scene);
-    }
-
-    @FXML
-    void crtcontest(MouseEvent event) throws IOException {
-        Stage stage = (Stage) crtcontestbtn.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("crtcontest-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("LatticeLine");
-        stage.setScene(scene);
-    }
 }

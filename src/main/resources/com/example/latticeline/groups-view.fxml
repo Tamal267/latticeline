@@ -116,7 +116,7 @@
       </AnchorPane>
       <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" prefHeight="546.0" prefWidth="700.0" style="-fx-background-color: transparent; -fx-background: transparent;" vbarPolicy="NEVER" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
-              <TilePane fx:id="tilePane" style="-fx-background-color: none;" />
+              <TilePane fx:id="tilePane" prefWidth="3000.0" style="-fx-background-color: none;" />
          </content>
       </ScrollPane>
       <HBox layoutX="202.0" layoutY="544.0" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0">

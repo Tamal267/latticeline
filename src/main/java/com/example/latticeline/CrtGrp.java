@@ -35,6 +35,7 @@ public class CrtGrp implements Initializable {
     @FXML
     private TextArea gpBox;
 
+
     @FXML
     void crtGroup(MouseEvent event) throws FileNotFoundException, SQLException {
         File file = new File("userinfo.txt");

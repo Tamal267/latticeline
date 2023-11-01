@@ -174,7 +174,7 @@ public class Compiler implements Initializable {
             "#include<bits/stdc++.h>",
             "using namespace std;",
             "",
-            "int main {",
+            "int main() {",
             "",
             "",
             "}"

@@ -57,9 +57,12 @@ public class CrtAssing implements Initializable {
     @FXML
     private AnchorPane groupbtn;
 
+    @FXML
+    private TextArea timelimitbox;
+
     FileChooser fileChooser = new FileChooser();
 
-    String id, users, txt, acceptedCode, inp;
+    String id, users, txt, acceptedCode, inp = "", timelimit;
 
     @FXML
     void nxtInput(MouseEvent event) {
@@ -92,10 +95,11 @@ public class CrtAssing implements Initializable {
         acceptedCode = encodeDecode.encode(codeBox.getText());
         inp += encodeDecode.encode(inputBox.getText()) + " ";
         users = "-- ";
+        timelimit = timelimitbox.getText();
         File file = new File("groupname.txt");
         Scanner sc = new Scanner(file);
         String gpname = sc.next();
-        String insertStr = "'" + gpname + "', '" + txt + "', '" + acceptedCode + "', '" + inp + "', '" + id + "', '" + users + "'";
+        String insertStr = "'" + gpname + "', '" + txt + "', '" + acceptedCode + "', '" + inp + "', '" + id + "', '" + users + "', '" + timelimit + "'";
         System.out.println(insertStr);
         Connection connection = null;
         try {
