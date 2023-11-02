@@ -48,7 +48,7 @@
                 </VBox>
                 <VBox layoutX="18.0" layoutY="116.0" prefHeight="113.0" prefWidth="164.0">
                     <children>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #08f4fc; -fx-border-width: 0 0 2 0; -fx-border-radius: 10;">
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="menubar" stylesheets="@btn.css">
                             <children>
                                 <GridPane layoutX="10.0" layoutY="7.0" prefHeight="29.0" prefWidth="145.0" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="7.0">
                                     <columnConstraints>
@@ -69,7 +69,7 @@
                                 </GridPane>
                             </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="compilerbtn" onMouseClicked="#compiler" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #08f4fc; -fx-border-width: 0 0 2 0; -fx-border-radius: 10;">
+                        <AnchorPane fx:id="compilerbtn" onMouseClicked="#compiler" prefHeight="200.0" prefWidth="200.0" styleClass="menubar" stylesheets="@btn.css">
                             <children>
                                 <GridPane layoutX="10.0" layoutY="7.0" prefHeight="29.0" prefWidth="145.0" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="7.0">
                                     <columnConstraints>
@@ -90,7 +90,7 @@
                                 </GridPane>
                             </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="groupbtn" onMouseClicked="#group" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #08f4fc; -fx-border-width: 0 0 2 0; -fx-border-radius: 10;">
+                        <AnchorPane fx:id="groupbtn" onMouseClicked="#group" prefHeight="200.0" prefWidth="200.0" styleClass="menubar" stylesheets="@btn.css">
                             <children>
                                 <GridPane layoutX="10.0" layoutY="7.0" prefHeight="29.0" prefWidth="145.0" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="7.0">
                                     <columnConstraints>
@@ -124,7 +124,7 @@
             </Button>
          </children>
       </HBox>
-      <GridPane hgap="10.0" layoutX="332.0" prefHeight="50.0" style="-fx-stroke: #f5ffa1;" vgap="10.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <GridPane hgap="10.0" layoutX="332.0" prefHeight="50.0" style="-fx-stroke: #f5ffa1;" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -135,7 +135,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <BorderPane prefHeight="200.0" prefWidth="200.0" styleClass="border" stylesheets="@btn.css" GridPane.columnIndex="1">
+            <BorderPane prefHeight="200.0" prefWidth="200.0" styleClass="rankHeader" stylesheets="@btn.css" GridPane.columnIndex="1">
                <center>
                   <Text fill="#f5ffa1" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" textAlignment="CENTER" BorderPane.alignment="CENTER">
                      <font>
@@ -144,7 +144,7 @@
                   </Text>
                </center>
             </BorderPane>
-            <BorderPane prefHeight="200.0" prefWidth="200.0" styleClass="border" stylesheets="@btn.css" GridPane.columnIndex="3">
+            <BorderPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #DE6CD2FF;" styleClass="rankHeader" stylesheets="@btn.css" GridPane.columnIndex="3">
                <center>
                   <Text fill="#f5ffa1" strokeType="OUTSIDE" strokeWidth="0.0" text="Penalty" textAlignment="CENTER" BorderPane.alignment="CENTER">
                      <font>
@@ -153,7 +153,7 @@
                   </Text>
                </center>
             </BorderPane>
-            <BorderPane prefHeight="200.0" prefWidth="200.0" styleClass="border" stylesheets="@btn.css" GridPane.columnIndex="2">
+            <BorderPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #DE6CD2FF;" styleClass="rankHeader" stylesheets="@btn.css" GridPane.columnIndex="2">
                <center>
                   <Text fill="#f5ffa1" strokeType="OUTSIDE" strokeWidth="0.0" text="Solve" textAlignment="CENTER" BorderPane.alignment="CENTER">
                      <font>
@@ -162,11 +162,11 @@
                   </Text>
                </center>
             </BorderPane>
-            <BorderPane prefHeight="200.0" prefWidth="200.0" styleClass="border" stylesheets="@btn.css">
+            <BorderPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #DE6CD2FF;" styleClass="rankHeader" stylesheets="@btn.css">
                <center>
                   <Text fill="#f5ffa1" strokeType="OUTSIDE" strokeWidth="0.0" text="Rank" textAlignment="CENTER" BorderPane.alignment="CENTER">
                      <font>
-                        <Font size="20.0" />
+                        <Font name="System Bold" size="20.0" />
                      </font>
                   </Text>
                </center>

@@ -198,6 +198,12 @@ public class Groups implements Initializable {
                 txt.wrappingWidthProperty().bind(stackPane.widthProperty());
                 txt.setFill(Color.WHITE);
                 stackPane.setStyle("-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 2; -fx-border-color: WHITE;");
+                stackPane.setOnMouseEntered(e -> {
+                    stackPane.setStyle("-fx-background-radius: 10 10 30 10; -fx-border-radius: 10 10 30 10; -fx-border-width: 2; -fx-border-color: YELLOW;");
+                });
+                stackPane.setOnMouseExited(e -> {
+                    stackPane.setStyle("-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 2; -fx-border-color: WHITE;");
+                });
                 BorderPane.setMargin(stackPane, new Insets(20));
                 borderPane.setCenter(stackPane);
                 borderPane.setMaxSize(220, 110);

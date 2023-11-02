@@ -48,7 +48,7 @@ public class Status implements Initializable {
     @FXML
     private HBox teacherbtns;
 
-    String id, users, txt, acceptedCode, inp;
+    String id, users, txt, acceptedCode, inp, timelimit;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         tilePane.setMaxWidth(Region.USE_PREF_SIZE);
@@ -131,14 +131,16 @@ public class Status implements Initializable {
         txt = sc.nextLine();
         acceptedCode = sc.nextLine();
         inp = sc.nextLine();
+        timelimit = sc.nextLine();
         users = sc.nextLine();
 
-        Scanner usSc = new Scanner(users);
+        Scanner usSc;
 
         String fname;
         String temp = "";
         String atext = "";
         usSc = new Scanner(users);
+        System.out.println(users);
         String abc = usSc.next();
         while(usSc.hasNext()){
             fname = usSc.next();
@@ -203,6 +205,7 @@ public class Status implements Initializable {
         Stage stage = (Stage) backbtn.getScene().getWindow();
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("assign-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
+        scene.getStylesheets().add(HelloApplication.class.getResource("java-keywords.css").toExternalForm());
         stage.setTitle("LatticeLine");
         stage.setScene(scene);
     }

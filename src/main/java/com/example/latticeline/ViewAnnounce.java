@@ -24,6 +24,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
@@ -45,6 +46,9 @@ public class ViewAnnounce implements Initializable {
 
     @FXML
     private Button crtannouncebtn;
+
+    @FXML
+    private HBox teacherbtns;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -159,6 +163,19 @@ public class ViewAnnounce implements Initializable {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        File fl = new File("isteacher.txt");
+        Scanner scT = null;
+        try {
+            scT = new Scanner(fl);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        String fndTch = scT.next();
+        if (Objects.equals(fndTch, "teacher")) {
+            teacherbtns.setVisible(true);
+        } else {
+            teacherbtns.setVisible(false);
+        }
     }
 
     @FXML
@@ -197,7 +214,7 @@ public class ViewAnnounce implements Initializable {
     @FXML
     void back(MouseEvent event) throws IOException {
         Stage stage = (Stage) backbtn.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("groups-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("eachgroup-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("LatticeLine");
         stage.setScene(scene);

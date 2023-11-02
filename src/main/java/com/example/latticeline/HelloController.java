@@ -161,6 +161,7 @@ public class HelloController implements Initializable {
                         Stage stage = (Stage) borderPane.getScene().getWindow();
                         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("problem-view.fxml"));
                         Scene scene = new Scene(fxmlLoader.load());
+                        scene.getStylesheets().add(HelloApplication.class.getResource("java-keywords.css").toExternalForm());
                         stage.setTitle("LatticeLine");
                         stage.setScene(scene);
                     } catch (IOException ex) {
@@ -174,6 +175,12 @@ public class HelloController implements Initializable {
                 txt.wrappingWidthProperty().bind(stackPane.widthProperty());
                 txt.setFill(Color.WHITE);
                 stackPane.setStyle("-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 2; -fx-border-color: WHITE;");
+                stackPane.setOnMouseEntered(e -> {
+                    stackPane.setStyle("-fx-background-color: rgba(219, 245, 39, 0.45);-fx-background-radius: 10 10 50 10; -fx-border-radius: 10 10 50 10; -fx-border-width: 2; -fx-border-color: YELLOW;");
+                });
+                stackPane.setOnMouseExited(e -> {
+                    stackPane.setStyle("-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 2; -fx-border-color: WHITE;");
+                });
                 BorderPane.setMargin(stackPane, new Insets(20));
                 borderPane.setCenter(stackPane);
                 borderPane.setMaxSize(320, 320);

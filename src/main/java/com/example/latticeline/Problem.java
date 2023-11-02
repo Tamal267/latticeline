@@ -1,5 +1,6 @@
 package com.example.latticeline;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -14,6 +15,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.LineNumberFactory;
+import org.fxmisc.richtext.model.StyleSpans;
+import org.fxmisc.richtext.model.StyleSpansBuilder;
+import org.reactfx.Subscription;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,9 +30,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
@@ -34,40 +45,7 @@ import static java.lang.Integer.parseInt;
 public class Problem implements Initializable {
 
     @FXML
-    private AnchorPane problemsbtn;
-
-    @FXML
-    private ScrollPane scrollPane;
-
-    @FXML
-    private Text text;
-
-
-    @FXML
-    private BorderPane borderText;
-
-
-    @FXML
-    private Text problemId;
-
-
-    @FXML
-    private TextArea codeBox;
-
-    @FXML
-    private Text outBox;
-
-    @FXML
-    private BorderPane borderText1;
-
-
-    @FXML
-    private Button submitbtn;
-
-    @FXML
-    private HBox statusbtns;
-
-    FileChooser fileChooser = new FileChooser();
+    private Button acceptedbtn;
 
     @FXML
     private Button backbtn;
@@ -76,11 +54,221 @@ public class Problem implements Initializable {
     private AnchorPane compilerbtn;
 
     @FXML
-    private Button acceptedbtn;
+    private AnchorPane groupbtn;
 
     @FXML
-    private AnchorPane groupbtn;
+    private TextArea outBox;
+
+    @FXML
+    private Text problemId;
+
+    @FXML
+    private AnchorPane problemsbtn;
+
+
+    @FXML
+    private HBox statusbtns;
+
+    @FXML
+    private Button submitbtn;
+
+    @FXML
+    private TextArea text;
+
+
+    FileChooser fileChooser = new FileChooser();
+
     String id, users, txt, acceptedCode, inp, timelimit;
+
+
+    @FXML
+    private AnchorPane anchorPane;
+
+    @FXML
+    private BorderPane borderPane;
+
+
+
+
+
+
+
+
+    private static final String[] KEYWORDS = new String[] {
+            "alignas",
+            "alignof",
+            "and",
+            "and_eq",
+            "asm",
+            "atomic_cancel",
+            "atomic_commit",
+            "atomic_noexcept",
+            "auto",
+            "bitand",
+            "bitor",
+            "bool",
+            "break",
+            "case",
+            "catch",
+            "char",
+            "char8_t",
+            "char16_t",
+            "char32_t",
+            "class",
+            "compl",
+            "concept",
+            "const",
+            "consteval",
+            "constexpr",
+            "constinit",
+            "const_cast",
+            "continue",
+            "co_await",
+            "co_return",
+            "co_yield",
+            "decltype",
+            "default",
+            "delete",
+            "do",
+            "double",
+            "dynamic_cast",
+            "else",
+            "enum",
+            "explicit",
+            "export",
+            "extern",
+            "false",
+            "float",
+            "for",
+            "friend",
+            "goto",
+            "include",
+            "if",
+            "inline",
+            "int",
+            "long",
+            "mutable",
+            "namespace",
+            "new",
+            "noexcept",
+            "not",
+            "not_eq",
+            "nullptr",
+            "operator",
+            "or",
+            "or_eq",
+            "private",
+            "protected",
+            "public",
+            "reflexpr",
+            "register",
+            "reinterpret_cast",
+            "requires",
+            "return",
+            "short",
+            "signed",
+            "sizeof",
+            "static",
+            "static_assert",
+            "static_cast",
+            "struct",
+            "switch",
+            "synchronized",
+            "template",
+            "this",
+            "thread_local",
+            "throw",
+            "true",
+            "try",
+            "typedef",
+            "typeid",
+            "typename",
+            "union",
+            "unsigned",
+            "using",
+            "virtual",
+            "void",
+            "volatile",
+            "wchar_t",
+            "while",
+            "xor",
+            "xor_eq"
+    };
+
+    private static final String KEYWORD_PATTERN = "\\b(" + String.join("|", KEYWORDS) + ")\\b";
+    private static final String PAREN_PATTERN = "\\(|\\)";
+    private static final String BRACE_PATTERN = "\\{|\\}";
+    private static final String BRACKET_PATTERN = "\\[|\\]";
+    private static final String SEMICOLON_PATTERN = "\\;";
+    private static final String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"";
+    private static final String COMMENT_PATTERN = "//[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/";
+
+    private static final Pattern PATTERN = Pattern.compile(
+            "(?<KEYWORD>" + KEYWORD_PATTERN + ")"
+                    + "|(?<PAREN>" + PAREN_PATTERN + ")"
+                    + "|(?<BRACE>" + BRACE_PATTERN + ")"
+                    + "|(?<BRACKET>" + BRACKET_PATTERN + ")"
+                    + "|(?<SEMICOLON>" + SEMICOLON_PATTERN + ")"
+                    + "|(?<STRING>" + STRING_PATTERN + ")"
+                    + "|(?<COMMENT>" + COMMENT_PATTERN + ")"
+    );
+    private CodeArea codeArea;
+    private ExecutorService executor;
+    private static final String sampleCode = String.join("\n", new String[] {
+            "#include<bits/stdc++.h>",
+            "using namespace std;",
+            "",
+            "int main() {",
+            "",
+            "",
+            "}"
+    });
+
+    private Task<StyleSpans<Collection<String>>> computeHighlightingAsync() {
+        String text = codeArea.getText();
+        Task<StyleSpans<Collection<String>>> task = new Task<StyleSpans<Collection<String>>>() {
+            @Override
+            protected StyleSpans<Collection<String>> call() throws Exception {
+                return computeHighlighting(text);
+            }
+        };
+        executor.execute(task);
+        return task;
+    }
+
+    private void applyHighlighting(StyleSpans<Collection<String>> highlighting) {
+        codeArea.setStyleSpans(0, highlighting);
+    }
+
+    static StyleSpans<Collection<String>> computeHighlighting(String text) {
+        Matcher matcher = PATTERN.matcher(text);
+        int lastKwEnd = 0;
+        StyleSpansBuilder<Collection<String>> spansBuilder
+                = new StyleSpansBuilder<>();
+        while(matcher.find()) {
+            String styleClass =
+                    matcher.group("KEYWORD") != null ? "keyword" :
+                            matcher.group("PAREN") != null ? "paren" :
+                                    matcher.group("BRACE") != null ? "brace" :
+                                            matcher.group("BRACKET") != null ? "bracket" :
+                                                    matcher.group("SEMICOLON") != null ? "semicolon" :
+                                                            matcher.group("STRING") != null ? "string" :
+                                                                    matcher.group("COMMENT") != null ? "comment" :
+                                                                            null; /* never happens */ assert styleClass != null;
+            spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
+            spansBuilder.add(Collections.singleton(styleClass), matcher.end() - matcher.start());
+            lastKwEnd = matcher.end();
+        }
+        spansBuilder.add(Collections.emptyList(), text.length() - lastKwEnd);
+        return spansBuilder.create();
+    }
+
+
+
+
+
+
+
 
     @FXML
     void problems(MouseEvent event) throws IOException {
@@ -95,10 +283,10 @@ public class Problem implements Initializable {
     void chooseFile(MouseEvent event) throws FileNotFoundException {
         File file = fileChooser.showOpenDialog(new Stage());
         if (file != null) {
-            codeBox.clear();
+            codeArea.clear();
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
-                codeBox.appendText(scanner.nextLine() + "\n");
+                codeArea.appendText(scanner.nextLine() + "\n");
             }
         }
     }
@@ -144,7 +332,7 @@ public class Problem implements Initializable {
         String time = tmm.format(pat);
 
         File file = new File("assign.txt");
-        String encodedCode = Base64.getEncoder().encodeToString(codeBox.getText().getBytes());
+        String encodedCode = Base64.getEncoder().encodeToString(codeArea.getText().getBytes());
         int ac = 1;
         int mxTime = 0;
         int mxMemory = 0;
@@ -196,26 +384,42 @@ public class Problem implements Initializable {
                 usrs += " " + sc.nextLine() + " " + encodedMsg + " " + encodedCode;
                 System.out.println(encodedMsg);
                 query = "UPDATE problems SET users='" + usrs + "' WHERE problemid='" + id + "';";
+                System.out.println(query);
                 preparedStatement = connection.prepareStatement(query);
                 preparedStatement.executeUpdate();
             }
         }
     }
 
-    @FXML
-    void accepted(MouseEvent event) throws IOException {
-        Stage stage = (Stage) acceptedbtn.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("acceptedp-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("LatticeLine");
-        stage.setScene(scene);
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        text.wrappingWidthProperty().bind(borderText.widthProperty());
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        outBox.wrappingWidthProperty().bind(borderText1.widthProperty());
+        executor = Executors.newSingleThreadExecutor();
+        codeArea = new CodeArea();
+        codeArea.setStyle("-fx-font-size:14;");
+        codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
+        Subscription cleanupWhenDone = codeArea.multiPlainChanges()
+                .successionEnds(Duration.ofMillis(500))
+                .retainLatestUntilLater(executor)
+                .supplyTask(this::computeHighlightingAsync)
+                .awaitLatest(codeArea.multiPlainChanges())
+                .filterMap(t -> {
+                    if(t.isSuccess()) {
+                        return Optional.of(t.get());
+                    } else {
+                        t.getFailure().printStackTrace();
+                        return Optional.empty();
+                    }
+                })
+                .subscribe(this::applyHighlighting);
+
+        // call when no longer need it: `cleanupWhenFinished.unsubscribe();`
+
+
+
+        codeArea.replaceText(0, 0, sampleCode);
+
+
         File usFile = new File("userinfo.txt");
         Scanner usSc = null;
         try {
@@ -233,34 +437,37 @@ public class Problem implements Initializable {
             txt = sc.nextLine();
             byte[] decodedBytes = Base64.getDecoder().decode(txt);
             String decodedString = new String(decodedBytes);
-            text.setText(decodedString);
             System.out.println(txt);
             acceptedCode = sc.nextLine();
             inp = sc.nextLine();
             timelimit = sc.nextLine();
             text.setText("Time Limit: " + timelimit + "s\n\n" + decodedString);
-            while (sc.hasNext()) {
-                users = sc.next();
-                if (Objects.equals(users, usn)) {
-                    acceptedbtn.setVisible(true);
-                    String temp = sc.next();
-                    String atext = sc.next();
-                    byte[] atextDec = Base64.getDecoder().decode(atext);
-                    String atextStr = new String(atextDec);
-                    byte[] tempDec = Base64.getDecoder().decode(temp);
-                    String tempStr = new String(tempDec);
-//                    System.out.println(atextStr);
-                    String t = tempStr + "\n\n-------------\n\n" + atextStr;
-                    FileWriter fileWriter = new FileWriter("acceptedinfo.txt");
-                    fileWriter.write(t);
-                    fileWriter.close();
-                    acceptedbtn.setVisible(true);
+            users = sc.nextLine();
+
+            String fname;
+            String temp = "";
+            String atext = "";
+            int flag = 0;
+            usSc = new Scanner(users);
+            String abc = usSc.next();
+            while(usSc.hasNext()){
+                fname = usSc.next();
+                temp = usSc.next();
+                atext = usSc.next();
+                System.out.println(fname + "\n" + temp + "\n" + atext);
+                if(Objects.equals(fname, usn)){
+                    flag = 1;
+                    break;
                 }
+            }
+            if(flag == 1){
+                outBox.setText(encodeDecode.decode(temp));
+                codeArea.clear();
+                codeArea.replaceText(0, 0, encodeDecode.decode(atext));
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
+        borderPane.setCenter(codeArea);
     }
 }

@@ -45,7 +45,7 @@
                 </VBox>
                 <VBox layoutX="18.0" layoutY="116.0" prefHeight="113.0" prefWidth="164.0">
                     <children>
-                        <AnchorPane fx:id="problemsbtn" onMouseClicked="#problems" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #08f4fc; -fx-border-width: 0 0 2 0; -fx-border-radius: 10;">
+                        <AnchorPane fx:id="problemsbtn" onMouseClicked="#problems" prefHeight="200.0" prefWidth="200.0" styleClass="menubar" stylesheets="@btn.css">
                             <children>
                                 <GridPane layoutX="10.0" layoutY="7.0" prefHeight="29.0" prefWidth="145.0" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="7.0">
                                     <columnConstraints>
@@ -66,7 +66,7 @@
                                 </GridPane>
                             </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="compilerbtn" onMouseClicked="#compiler" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #08f4fc; -fx-border-width: 0 0 2 0; -fx-border-radius: 10;">
+                        <AnchorPane fx:id="compilerbtn" onMouseClicked="#compiler" prefHeight="200.0" prefWidth="200.0" styleClass="menubar" stylesheets="@btn.css">
                             <children>
                                 <GridPane layoutX="10.0" layoutY="7.0" prefHeight="29.0" prefWidth="145.0" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="7.0">
                                     <columnConstraints>
@@ -87,7 +87,7 @@
                                 </GridPane>
                             </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="groupsbtn" onMouseClicked="#group" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #08f4fc; -fx-border-width: 0 0 2 0; -fx-border-radius: 10;">
+                        <AnchorPane fx:id="groupsbtn" onMouseClicked="#group" prefHeight="200.0" prefWidth="200.0" styleClass="menubar" stylesheets="@btn.css">
                             <children>
                                 <GridPane layoutX="10.0" layoutY="7.0" prefHeight="29.0" prefWidth="145.0" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="7.0">
                                     <columnConstraints>
@@ -203,7 +203,7 @@
                   </BorderPane>
                   <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                      <center>
-                        <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" text="Note: Starting and Ending time must be inserted in predefined formate. Ex: 2023 10 31 20 30 00" wrapText="true" BorderPane.alignment="CENTER">
+                        <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" style="-fx-text-fill: red;" text="Note: Starting and Ending time must be inserted in predefined formate. Ex: 2023 10 31 20 30 00 (year, month, day, hour, minute, second)" wrapText="true" BorderPane.alignment="CENTER">
                            <BorderPane.margin>
                               <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                            </BorderPane.margin>

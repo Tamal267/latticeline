@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -234,6 +235,12 @@ public class ShowContests implements Initializable {
                 txt.wrappingWidthProperty().bind(stackPane.widthProperty());
                 txt.setFill(Color.WHITE);
                 stackPane.setStyle("-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 2; -fx-border-color: WHITE;");
+                stackPane.setOnMouseEntered(e -> {
+                    stackPane.setStyle("-fx-background-radius: 10 10 30 10; -fx-border-radius: 10 10 30 10; -fx-border-width: 2; -fx-border-color: YELLOW;");
+                });
+                stackPane.setOnMouseExited(e -> {
+                    stackPane.setStyle("-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 2; -fx-border-color: WHITE;");
+                });
                 BorderPane.setMargin(stackPane, new Insets(20));
                 borderPane.setCenter(stackPane);
                 borderPane.setMaxSize(320, 320);
@@ -243,7 +250,6 @@ public class ShowContests implements Initializable {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
 
     }
 
