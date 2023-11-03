@@ -127,7 +127,7 @@
          <children>
             <BorderPane fx:id="borderPane">
                <bottom>
-                  <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                  <HBox prefHeight="0.0" prefWidth="365.0" BorderPane.alignment="CENTER">
                      <children>
                         <Button mnemonicParsing="false" onMouseClicked="#chooseFile" text="Choose File">
                            <HBox.margin>

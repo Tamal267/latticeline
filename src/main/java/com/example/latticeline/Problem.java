@@ -1,5 +1,6 @@
 package com.example.latticeline;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,6 +9,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -42,7 +45,7 @@ import java.util.regex.Pattern;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 
-public class Problem implements Initializable {
+public class Problem extends editorUI implements Initializable {
 
     @FXML
     private Button acceptedbtn;
@@ -86,189 +89,6 @@ public class Problem implements Initializable {
 
     @FXML
     private BorderPane borderPane;
-
-
-
-
-
-
-
-
-    private static final String[] KEYWORDS = new String[] {
-            "alignas",
-            "alignof",
-            "and",
-            "and_eq",
-            "asm",
-            "atomic_cancel",
-            "atomic_commit",
-            "atomic_noexcept",
-            "auto",
-            "bitand",
-            "bitor",
-            "bool",
-            "break",
-            "case",
-            "catch",
-            "char",
-            "char8_t",
-            "char16_t",
-            "char32_t",
-            "class",
-            "compl",
-            "concept",
-            "const",
-            "consteval",
-            "constexpr",
-            "constinit",
-            "const_cast",
-            "continue",
-            "co_await",
-            "co_return",
-            "co_yield",
-            "decltype",
-            "default",
-            "delete",
-            "do",
-            "double",
-            "dynamic_cast",
-            "else",
-            "enum",
-            "explicit",
-            "export",
-            "extern",
-            "false",
-            "float",
-            "for",
-            "friend",
-            "goto",
-            "include",
-            "if",
-            "inline",
-            "int",
-            "long",
-            "mutable",
-            "namespace",
-            "new",
-            "noexcept",
-            "not",
-            "not_eq",
-            "nullptr",
-            "operator",
-            "or",
-            "or_eq",
-            "private",
-            "protected",
-            "public",
-            "reflexpr",
-            "register",
-            "reinterpret_cast",
-            "requires",
-            "return",
-            "short",
-            "signed",
-            "sizeof",
-            "static",
-            "static_assert",
-            "static_cast",
-            "struct",
-            "switch",
-            "synchronized",
-            "template",
-            "this",
-            "thread_local",
-            "throw",
-            "true",
-            "try",
-            "typedef",
-            "typeid",
-            "typename",
-            "union",
-            "unsigned",
-            "using",
-            "virtual",
-            "void",
-            "volatile",
-            "wchar_t",
-            "while",
-            "xor",
-            "xor_eq"
-    };
-
-    private static final String KEYWORD_PATTERN = "\\b(" + String.join("|", KEYWORDS) + ")\\b";
-    private static final String PAREN_PATTERN = "\\(|\\)";
-    private static final String BRACE_PATTERN = "\\{|\\}";
-    private static final String BRACKET_PATTERN = "\\[|\\]";
-    private static final String SEMICOLON_PATTERN = "\\;";
-    private static final String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"";
-    private static final String COMMENT_PATTERN = "//[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/";
-
-    private static final Pattern PATTERN = Pattern.compile(
-            "(?<KEYWORD>" + KEYWORD_PATTERN + ")"
-                    + "|(?<PAREN>" + PAREN_PATTERN + ")"
-                    + "|(?<BRACE>" + BRACE_PATTERN + ")"
-                    + "|(?<BRACKET>" + BRACKET_PATTERN + ")"
-                    + "|(?<SEMICOLON>" + SEMICOLON_PATTERN + ")"
-                    + "|(?<STRING>" + STRING_PATTERN + ")"
-                    + "|(?<COMMENT>" + COMMENT_PATTERN + ")"
-    );
-    private CodeArea codeArea;
-    private ExecutorService executor;
-    private static final String sampleCode = String.join("\n", new String[] {
-            "#include<bits/stdc++.h>",
-            "using namespace std;",
-            "",
-            "int main() {",
-            "",
-            "",
-            "}"
-    });
-
-    private Task<StyleSpans<Collection<String>>> computeHighlightingAsync() {
-        String text = codeArea.getText();
-        Task<StyleSpans<Collection<String>>> task = new Task<StyleSpans<Collection<String>>>() {
-            @Override
-            protected StyleSpans<Collection<String>> call() throws Exception {
-                return computeHighlighting(text);
-            }
-        };
-        executor.execute(task);
-        return task;
-    }
-
-    private void applyHighlighting(StyleSpans<Collection<String>> highlighting) {
-        codeArea.setStyleSpans(0, highlighting);
-    }
-
-    static StyleSpans<Collection<String>> computeHighlighting(String text) {
-        Matcher matcher = PATTERN.matcher(text);
-        int lastKwEnd = 0;
-        StyleSpansBuilder<Collection<String>> spansBuilder
-                = new StyleSpansBuilder<>();
-        while(matcher.find()) {
-            String styleClass =
-                    matcher.group("KEYWORD") != null ? "keyword" :
-                            matcher.group("PAREN") != null ? "paren" :
-                                    matcher.group("BRACE") != null ? "brace" :
-                                            matcher.group("BRACKET") != null ? "bracket" :
-                                                    matcher.group("SEMICOLON") != null ? "semicolon" :
-                                                            matcher.group("STRING") != null ? "string" :
-                                                                    matcher.group("COMMENT") != null ? "comment" :
-                                                                            null; /* never happens */ assert styleClass != null;
-            spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
-            spansBuilder.add(Collections.singleton(styleClass), matcher.end() - matcher.start());
-            lastKwEnd = matcher.end();
-        }
-        spansBuilder.add(Collections.emptyList(), text.length() - lastKwEnd);
-        return spansBuilder.create();
-    }
-
-
-
-
-
-
-
 
     @FXML
     void problems(MouseEvent event) throws IOException {
@@ -398,6 +218,16 @@ public class Problem implements Initializable {
         codeArea = new CodeArea();
         codeArea.setStyle("-fx-font-size:14;");
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
+        Pattern whiteSpace = Pattern.compile( "^\\s+" );
+
+        codeArea.addEventFilter( KeyEvent.KEY_PRESSED, KE ->
+        {
+            if ( KE.getCode() == KeyCode.ENTER )
+            {
+                Matcher m = whiteSpace.matcher( codeArea.getParagraph( codeArea.getCurrentParagraph() ).getSegments().get( 0 ) );
+                if ( m.find() ) Platform.runLater( () -> codeArea.insertText( codeArea.getCaretPosition(), m.group() ) );
+            }
+        });
         Subscription cleanupWhenDone = codeArea.multiPlainChanges()
                 .successionEnds(Duration.ofMillis(500))
                 .retainLatestUntilLater(executor)

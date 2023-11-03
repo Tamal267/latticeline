@@ -69,17 +69,19 @@ public class CompilerOnline {
             System.out.println(output);
 
             String encodeOut = "";
+            int flag = 1;
             String dOut = "";
             for(int i = 0; i< Objects.requireNonNull(output).length(); i++){
                 if(output.charAt(i) == '\\'){
                     dOut += encodeDecode.decode(encodeOut);
                     encodeOut = "";
                     i++;
+                    flag = 0;
                 }
                 else encodeOut += output.charAt(i);
             }
 
-            System.out.println(encodeOut);
+            if(flag == 1) dOut = encodeDecode.decode(encodeOut);
 
             Map<String, String > map = new HashMap<>();
             map.put("stdout", dOut);

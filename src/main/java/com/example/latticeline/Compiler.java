@@ -1,11 +1,14 @@
 package com.example.latticeline;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -30,7 +33,7 @@ import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Compiler implements Initializable {
+public class Compiler extends editorUI implements Initializable {
 
     @FXML
     private WebView webview;
@@ -44,96 +47,6 @@ public class Compiler implements Initializable {
 
     @FXML
     private BorderPane borderPane;
-
-
-
-
-
-
-    private static final String[] KEYWORDS = new String[] {
-            "asm","double","new","switch","auto","else","operator","template",
-            "break","enum","private","this","case","extern","protected","throw",
-            "catch","float","public","try","char","for","register","typedef",
-            "class","friend","return","union","const","goto","short","unsigned",
-            "continue","if","signed","virtual","default","inline","sizeof","void",
-            "delete","int","static","volatile","do","long","struct","while","#include"
-    };
-
-    private static final String KEYWORD_PATTERN = "\\b(" + String.join("|", KEYWORDS) + ")\\b";
-    private static final String PAREN_PATTERN = "\\(|\\)";
-    private static final String BRACE_PATTERN = "\\{|\\}";
-    private static final String BRACKET_PATTERN = "\\[|\\]";
-    private static final String SEMICOLON_PATTERN = "\\;";
-    private static final String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"";
-    private static final String COMMENT_PATTERN = "//[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/";
-
-    private static final Pattern PATTERN = Pattern.compile(
-            "(?<KEYWORD>" + KEYWORD_PATTERN + ")"
-                    + "|(?<PAREN>" + PAREN_PATTERN + ")"
-                    + "|(?<BRACE>" + BRACE_PATTERN + ")"
-                    + "|(?<BRACKET>" + BRACKET_PATTERN + ")"
-                    + "|(?<SEMICOLON>" + SEMICOLON_PATTERN + ")"
-                    + "|(?<STRING>" + STRING_PATTERN + ")"
-                    + "|(?<COMMENT>" + COMMENT_PATTERN + ")"
-    );
-    private CodeArea codeArea;
-    private ExecutorService executor;
-    private static final String sampleCode = String.join("\n", new String[] {
-            "#include<bits/stdc++.h>",
-            "using namespace std;",
-            "",
-            "int main() {",
-            "",
-            "",
-            "}"
-    });
-
-    private Task<StyleSpans<Collection<String>>> computeHighlightingAsync() {
-        String text = codeArea.getText();
-        Task<StyleSpans<Collection<String>>> task = new Task<StyleSpans<Collection<String>>>() {
-            @Override
-            protected StyleSpans<Collection<String>> call() throws Exception {
-                return computeHighlighting(text);
-            }
-        };
-        executor.execute(task);
-        return task;
-    }
-
-    private void applyHighlighting(StyleSpans<Collection<String>> highlighting) {
-        codeArea.setStyleSpans(0, highlighting);
-    }
-
-    static StyleSpans<Collection<String>> computeHighlighting(String text) {
-        Matcher matcher = PATTERN.matcher(text);
-        int lastKwEnd = 0;
-        StyleSpansBuilder<Collection<String>> spansBuilder
-                = new StyleSpansBuilder<>();
-        while(matcher.find()) {
-            String styleClass =
-                    matcher.group("KEYWORD") != null ? "keyword" :
-                            matcher.group("PAREN") != null ? "paren" :
-                                    matcher.group("BRACE") != null ? "brace" :
-                                            matcher.group("BRACKET") != null ? "bracket" :
-                                                    matcher.group("SEMICOLON") != null ? "semicolon" :
-                                                            matcher.group("STRING") != null ? "string" :
-                                                                    matcher.group("COMMENT") != null ? "comment" :
-                                                                            null; /* never happens */ assert styleClass != null;
-            spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
-            spansBuilder.add(Collections.singleton(styleClass), matcher.end() - matcher.start());
-            lastKwEnd = matcher.end();
-        }
-        spansBuilder.add(Collections.emptyList(), text.length() - lastKwEnd);
-        return spansBuilder.create();
-    }
-
-
-
-
-
-
-
-
 
 
     @Override
@@ -209,6 +122,18 @@ public class Compiler implements Initializable {
         codeArea = new CodeArea();
         codeArea.setStyle("-fx-font-size:18;");
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
+
+        Pattern whiteSpace = Pattern.compile( "^\\s+" );
+
+        codeArea.addEventFilter( KeyEvent.KEY_PRESSED, KE ->
+        {
+            if ( KE.getCode() == KeyCode.ENTER )
+            {
+                Matcher m = whiteSpace.matcher( codeArea.getParagraph( codeArea.getCurrentParagraph() ).getSegments().get( 0 ) );
+                if ( m.find() ) Platform.runLater( () -> codeArea.insertText( codeArea.getCaretPosition(), m.group() ) );
+            }
+        });
+
         Subscription cleanupWhenDone = codeArea.multiPlainChanges()
                 .successionEnds(Duration.ofMillis(500))
                 .retainLatestUntilLater(executor)
@@ -229,6 +154,8 @@ public class Compiler implements Initializable {
         codeArea.replaceText(0, 0, sampleCode);
 
         borderPane.setCenter(codeArea);
+
+        outputBox.setEditable(false);
     }
 
     FileChooser fileChooser = new FileChooser();
@@ -256,7 +183,7 @@ public class Compiler implements Initializable {
         String encodedCode = Base64.getEncoder().encodeToString(codeArea.getText().getBytes());
         String encodedInput = Base64.getEncoder().encodeToString(inputBox.getText().getBytes());
         Map<String, String> map = CompilerOnline.compile(encodedCode, encodedInput, "cpp", "1");
-        outputBox.appendText(map.toString());
+        outputBox.appendText(map.get("stdout") + "\nTime: " + (int)(Double.parseDouble(map.get("time")) * 1000) + "s\nMemory: " + map.get("memory") + "KB\nStatus: " + map.get("status"));
     }
 
 
