@@ -20,6 +20,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
@@ -95,7 +96,16 @@ public class CrtAssing implements Initializable {
         acceptedCode = encodeDecode.encode(codeBox.getText());
         inp += encodeDecode.encode(inputBox.getText()) + " ";
         users = "-- ";
+        if(Objects.equals(id, "") || Objects.equals(txt, "") || Objects.equals(acceptedCode, "") ){
+            status.setText("All the boxes must be filled up");
+            return;
+        }
         timelimit = timelimitbox.getText();
+        try {
+            int tl = Integer.parseInt(timelimit);
+        } catch (NumberFormatException e) {
+            status.setText("Enter Time Limit Correctly");
+        }
         File file = new File("groupname.txt");
         Scanner sc = new Scanner(file);
         String gpname = sc.next();

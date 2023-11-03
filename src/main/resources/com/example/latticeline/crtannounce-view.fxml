@@ -131,7 +131,7 @@
                         <Button fx:id="anbtn" mnemonicParsing="false" onMouseClicked="#announce" styleClass="assign" stylesheets="@btn.css" text="Create Announce" BorderPane.alignment="CENTER" />
                      </bottom>
                      <top>
-                        <TextArea fx:id="anbox" prefHeight="200.0" prefWidth="200.0" promptText="Enter announce" BorderPane.alignment="CENTER">
+                        <TextArea fx:id="anbox" prefHeight="388.0" prefWidth="558.0" promptText="Write announce" BorderPane.alignment="CENTER">
                            <BorderPane.margin>
                               <Insets bottom="20.0" />
                            </BorderPane.margin>

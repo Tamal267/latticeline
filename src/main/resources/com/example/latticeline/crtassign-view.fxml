@@ -178,7 +178,7 @@
                   </Button>
                </children>
             </HBox>
-            <Label fx:id="status" layoutX="31.0" layoutY="509.0" />
+            <Label fx:id="status" layoutX="31.0" layoutY="509.0" textFill="RED" />
          </children>
         </AnchorPane>
     </children>

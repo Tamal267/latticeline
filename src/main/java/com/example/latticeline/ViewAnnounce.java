@@ -139,26 +139,29 @@ public class ViewAnnounce implements Initializable {
             ResultSet resultSet =  preparedStatement.executeQuery();
 
             while(resultSet.next()){
-                String asn = resultSet.getString("announce");
-                asn = encodeDecode.decode(asn);
-                BorderPane borderPane = new BorderPane();
-                Text txt = new Text();
-                txt.setText(asn);
+                String as = resultSet.getString("announce");
+                Scanner sc = new Scanner(as);
+                while(sc.hasNext()) {
+                    String asn = encodeDecode.decode(sc.next());
+                    BorderPane borderPane = new BorderPane();
+                    Text txt = new Text();
+                    txt.setText(asn);
 //                txt.setWrappingWidth(250);
-                borderPane.setId(asn);
-                StackPane stackPane = new StackPane();
-                stackPane.getChildren().add(txt);
-                stackPane.setMaxSize(500, 500);
-                stackPane.setMinSize(500, 500);
-                txt.setTextAlignment(TextAlignment.CENTER);
-                txt.wrappingWidthProperty().bind(stackPane.widthProperty());
-                txt.setFill(Color.WHITE);
-                stackPane.setStyle("-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 2; -fx-border-color: WHITE;");
-                BorderPane.setMargin(stackPane, new Insets(20));
-                borderPane.setCenter(stackPane);
-                borderPane.setMaxSize(520, 520);
-                borderPane.setMinSize(520, 520);
-                tilePane.getChildren().add(borderPane);
+                    borderPane.setId(asn);
+                    StackPane stackPane = new StackPane();
+                    stackPane.getChildren().add(txt);
+                    stackPane.setMaxSize(500, 500);
+                    stackPane.setMinSize(500, 500);
+                    txt.setTextAlignment(TextAlignment.CENTER);
+                    txt.wrappingWidthProperty().bind(stackPane.widthProperty());
+                    txt.setFill(Color.WHITE);
+                    stackPane.setStyle("-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 2; -fx-border-color: WHITE;");
+                    BorderPane.setMargin(stackPane, new Insets(20));
+                    borderPane.setCenter(stackPane);
+                    borderPane.setMaxSize(520, 520);
+                    borderPane.setMinSize(520, 520);
+                    tilePane.getChildren().add(borderPane);
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
